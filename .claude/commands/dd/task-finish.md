@@ -208,7 +208,7 @@ fi
 
 🎯 后续建议：
   - 提交代码变更：git add . && git commit -m "完成任务: $task_name"
-  - 执行代码反思：/dd:code-reflect
+  - 执行代码反思：/dd:code-reflect --详细
   - 开始下一个任务：/dd:task-start <任务ID>
   - 查看Epic进度：/dd:epic-show $epic_name
   - 查看项目状态：/dd:status
