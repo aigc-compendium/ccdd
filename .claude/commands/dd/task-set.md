@@ -1,53 +1,14 @@
 ---
-allowed-tools: Read, Write, LS
+allowed-tools: Bash
 ---
 
-# 任务管理操作
+Run `bash .claude/scripts/dd/task-set.sh` using a sub-agent and show me the complete output.
 
-管理任务的状态、优先级、依赖关系等属性，但不执行实际的代码开发工作。
-
-## 用法
-```
-/dd:task-manage <任务ID> <操作> [参数]
-```
-
-## 支持的操作
-
-### 状态管理
-```bash
-/dd:task-manage 001 set-status 进行中
-/dd:task-manage 001 set-status 已完成
-/dd:task-manage 001 set-status 阻塞
-/dd:task-manage 001 set-status 待开始
-```
-
-### 优先级管理  
-```bash
-/dd:task-manage 001 set-priority 高
-/dd:task-manage 001 set-priority 中
-/dd:task-manage 001 set-priority 低
-```
-
-### 依赖关系管理
-```bash
-/dd:task-manage 001 add-dependency 002,003
-/dd:task-manage 001 remove-dependency 002
-/dd:task-manage 001 clear-dependencies
-```
-
-### 任务信息更新
-```bash
-/dd:task-manage 001 set-effort 5小时
-/dd:task-manage 001 set-parallel true
-/dd:task-manage 001 add-note "遇到技术难点需要调研"
-```
-
-## 操作指南
-
-### 1. 参数验证
-
-```bash
-# 验证任务ID
+- DO NOT truncate.
+- DO NOT collapse. 
+- DO NOT abbreviate.
+- Show ALL lines in full.
+- DO NOT print any other comments.
 validate_task_id() {
   local task_id="$1"
   
@@ -57,10 +18,19 @@ validate_task_id() {
     return 1
   fi
   
-  # 查找任务文件
-  local task_file=$(find .claude/epics -name "${task_id}.md" | head -1)
+  # 解析任务ID格式：prd_name:task_num
+  if [[ "$task_id" != *:* ]]; then
+    echo "❌ 任务ID格式错误，应为：<PRD名称>:<任务编号>"
+    echo "示例：用户认证系统:001"
+    return 1
+  fi
+  
+  local prd_name="${task_id%%:*}"
+  local task_num="${task_id##*:}"
+  local task_file=".claude/epics/$prd_name/$task_num.md"
+  
   if [ ! -f "$task_file" ]; then
-    echo "❌ 任务不存在：$task_id"
+    echo "❌ 任务不存在：$task_file"
     echo "💡 运行 /dd:task-list 查看所有任务"
     return 1
   fi
@@ -295,7 +265,10 @@ check_dependency_chain() {
   visited_ref+=("$current_task")
   
   # 检查当前任务的依赖
-  local task_file=$(find .claude/epics -name "$current_task.md" | head -1)
+  # 解析任务ID格式：prd_name:task_num
+  local prd_name="${current_task%%:*}"
+  local task_num="${current_task##*:}"
+  local task_file=".claude/epics/$prd_name/$task_num.md"
   if [ -f "$task_file" ]; then
     local task_deps=$(grep "^依赖:" "$task_file" | sed 's/^依赖: *\[//; s/\]//' | tr ',' ' ')
     for dep in $task_deps; do

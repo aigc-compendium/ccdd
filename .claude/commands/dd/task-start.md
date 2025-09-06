@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Write, LS, Task
+allowed-tools: Bash, Read, Write, LS, Task
 ---
 
 # 开始执行任务
@@ -11,96 +11,80 @@ allowed-tools: Read, Write, LS, Task
 /dd:task-start <任务ID>
 ```
 
-## 参数说明
-- `<任务ID>` - 任务文件名（如：001、002 或 GitHub issue ID）
+## 快速检查
 
-## 预检清单
+1. **查找任务文件：**
+   ```bash
+   # 解析任务ID格式：prd_name:task_num
+   if [[ "$ARGUMENTS" != *:* ]]; then
+     echo "❌ 任务ID格式错误，应为：<PRD名称>:<任务编号>"
+     echo "示例：用户认证系统:001"
+     exit 1
+   fi
+   
+   prd_name="${ARGUMENTS%%:*}"
+   task_num="${ARGUMENTS##*:}"
+   task_file=".claude/epics/$prd_name/$task_num.md"
+   
+   if [ ! -f "$task_file" ]; then
+     echo "❌ 任务不存在：$task_file"
+     echo "💡 运行 /dd:task-list 查看所有任务"
+     exit 1
+   fi
+   ```
 
-### 1. 任务存在性验证
+2. **检查任务状态：**
+   ```bash
+   status=$(grep "^状态:" "$task_file" | sed 's/^状态: *//')
+   if [ "$status" = "已完成" ]; then
+     echo "✅ 任务已完成：$ARGUMENTS"
+     echo "💡 运行 /dd:task-list 查看其他任务"
+     exit 0
+   fi
+   ```
+
+3. **验证依赖关系：**
+   ```bash
+   dependencies=$(grep "^依赖:" "$task_file" | sed 's/^依赖: *\[//; s/\]//')
+   if [ -n "$dependencies" ]; then
+     for dep in ${dependencies//,/ }; do
+       dep_file=$(find .claude/epics -name "$dep.md" | head -1)
+       dep_status=$(grep "^状态:" "$dep_file" | sed 's/^状态: *//')
+       if [ "$dep_status" != "已完成" ]; then
+         echo "❌ 依赖任务 $dep 未完成（状态：$dep_status）"
+         exit 1
+       fi
+     done
+   fi
+   ```
+
+## 执行步骤
+
+### 1. 建立任务上下文
+
+提取任务信息：
 ```bash
-# 检查任务文件是否存在
-if [ -f ".claude/epics/*/001.md" ] || [ -f ".claude/epics/*/${ARGUMENTS}.md" ]; then
-  echo "✅ 找到任务文件"
-else
-  echo "❌ 任务不存在：$ARGUMENTS"
-  echo "💡 运行 /dd:status 查看可用任务"
-  exit 1
-fi
-```
-
-### 2. 任务状态检查
-```bash
-# 检查任务当前状态
-task_status=$(grep "^状态:" "$task_file" | sed 's/^状态: *//')
-if [ "$task_status" == "已完成" ]; then
-  echo "⚠️ 任务已完成，确认重新开始？(是/否)"
-  # 等待用户确认
-fi
-```
-
-### 3. 依赖关系验证
-```bash
-# 检查任务依赖是否满足
-dependencies=$(grep "^依赖:" "$task_file" | sed 's/^依赖: *\[//; s/\]//')
-if [ -n "$dependencies" ]; then
-  for dep in ${dependencies//,/ }; do
-    dep_status=$(grep "^状态:" ".claude/epics/*/$dep.md" | sed 's/^状态: *//')
-    if [ "$dep_status" != "已完成" ]; then
-      echo "❌ 依赖任务 $dep 未完成（状态：$dep_status）"
-      echo "💡 请先完成依赖任务或确认可以并行进行"
-      exit 1
-    fi
-  done
-fi
-```
-
-## 操作指南
-
-### 1. 任务上下文建立
-
-#### 读取任务详情
-```bash
-# 加载任务文件内容
-task_file=$(find .claude/epics -name "${ARGUMENTS}.md" | head -1)
 task_name=$(grep "^名称:" "$task_file" | sed 's/^名称: *//')
-task_description=$(sed -n '/^## 目标/,/^## /p' "$task_file" | head -n -1 | tail -n +2)
-```
-
-#### UI 图片智能识别（自动触发）
-```bash
-# 检测任务是否为UI开发相关任务
-ui_keywords="UI|界面|页面|组件|前端|设计|样式|布局|响应式|React|Vue|HTML|CSS"
-task_full_content=$(cat "$task_file")
-
-if echo "$task_full_content" | grep -iE "$ui_keywords" > /dev/null; then
-  echo "🎨 检测到UI开发任务，开始智能识别相关设计图片..."
-  
-  # 使用UI分析智能体扫描和分析设计图片
-  # 调用 Task 工具使用 UI 分析智能体
-  echo "📸 扫描设计图片: 任务ID=$ARGUMENTS, 任务名称=$task_name"
-  echo "🔍 使用UI分析智能体分析匹配的设计图片..."
-fi
-```
-
-#### 创建任务工作空间
-```bash
-# 在 .claude/context/ 中创建当前任务上下文
+epic_name=$(basename $(dirname "$task_file"))
 current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+```
 
+创建当前任务上下文文件：
+```bash
 cat > .claude/context/current-task.md << EOF
 ---
 任务ID: $ARGUMENTS
 任务名称: $task_name
+Epic: $epic_name
 开始时间: $current_time
 状态: 进行中
 上次更新: $current_time
-UI任务: $(echo "$task_full_content" | grep -iE "$ui_keywords" > /dev/null && echo "是" || echo "否")
 ---
 
 # 当前任务：$task_name
 
 ## 任务目标
-$task_description
+$(sed -n '/^## 目标/,/^## /p' "$task_file" | head -n -1 | tail -n +2)
 
 ## 执行计划
 [将在执行过程中更新]
@@ -119,44 +103,15 @@ $task_description
 EOF
 ```
 
-### 2. 任务分析阶段
-
-#### UI 任务智能体调用（自动触发）
-**如果检测到UI任务，执行以下调用：**
-```yaml
-Task:
-  description: "UI设计图片分析"
-  subagent_type: "ui-analyzer"
-  prompt: |
-    为任务「{任务名称}」(ID: {任务ID}) 执行UI设计分析：
-    
-    任务详情：
-    {任务完整内容}
-    
-    请执行：
-    1. 扫描以下目录中的设计图片：
-       - .claude/designs/
-       - ./designs/
-       
-    2. 匹配相关图片文件：
-       - 按任务ID匹配: {任务ID}*.*
-       - 按任务名称匹配: *{关键词}*.*
-       
-    3. 深度分析找到的设计图片：
-       - 布局结构和组件层次
-       - 色彩方案和设计规范
-       - 交互状态和响应式要求
-       - 文字内容和图标元素
-       
-    4. 生成UI开发上下文文档到：
-       .claude/context/ui-context-{任务ID}.md
-       
-    5. 提供代码实现建议和组件模板
-    
-    如未找到相关图片，引导用户将设计文件放入指定目录。
+### 2. 导入进度更新函数
+```bash
+# 导入task-progress的底层函数
+source .claude/commands/dd/task-progress.md
 ```
 
-#### 使用智能体深度分析
+### 3. 任务分析阶段
+
+使用智能体进行深度分析：
 ```yaml
 Task:
   description: "分析任务执行计划"
@@ -164,254 +119,105 @@ Task:
   prompt: |
     分析任务：$task_name（ID: $ARGUMENTS）
     
-    任务内容：
-    {插入完整的任务文件内容}
-    
-    当前项目上下文：
-    {插入相关的项目上下文}
+    任务文件内容：
+    $(cat "$task_file")
     
     请提供：
     1. 详细的实施步骤分解
-    2. 需要修改的文件清单
+    2. 需要分析的文件清单
     3. 可能的风险点和注意事项
     4. 与其他任务/组件的集成考虑
     5. 验收标准的具体检查方法
     
+    重要：严格遵循绝对安全规则
+    - 禁止任何git操作
+    - 只能在.claude/目录内修改文件
+    - 只提供分析和建议，不直接修改代码
+    
+    分析完成后调用: epic_todo_update("$ARGUMENTS", "任务分析完成")
+    
     确保分析全面且实用，为实际开发提供明确指导。
 ```
 
-#### 更新任务状态
+### 4. 自动更新进度
 ```bash
-# 更新任务文件状态
+# 任务分析完成后自动更新Epic进度
+epic_todo_update "$ARGUMENTS" "任务分析和上下文建立完成"
+```
+
+### 3. 更新任务状态
+
+更新任务文件：
+```bash
 current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 sed -i.bak "s/^状态:.*/状态: 进行中/" "$task_file"
 sed -i.bak "s/^最后更新:.*/最后更新: $current_time/" "$task_file"
 rm "${task_file}.bak"
 ```
 
-### 3. 实施阶段
-
-#### 分步执行
-```markdown
-对于任务中的每个实施步骤：
-
-1. **步骤分析**
-   - 理解当前步骤的目标
-   - 识别需要的输入和预期输出
-   - 检查步骤的前置条件
-
-2. **代码实施**
-   - 严格遵循 `.claude/rules/absolute-rules.md`
-   - 只分析和建议，不直接修改代码
-   - 提供具体的实施指导
-
-3. **步骤验证**  
-   - 检查实施结果是否符合预期
-   - 验证与其他组件的兼容性
-   - 确认没有引入新问题
-
-4. **进度更新**
-   - 更新 current-task.md 中的进度
-   - 记录完成的工作和遇到的问题
-```
-
-### 4. 持续监控和调整
-
-#### 定期状态检查
-```bash
-# 每完成一个主要步骤后
-update_task_progress() {
-  local step="$1"
-  local current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  
-  # 更新进度文件
-  echo "- [x] $step - 完成时间：$current_time" >> .claude/context/current-task.md
-  
-  # 更新任务文件的最后更新时间
-  sed -i.bak "s/^最后更新:.*/最后更新: $current_time/" "$task_file"
-  rm "${task_file}.bak"
-}
-```
-
-#### 问题和阻碍处理
-```bash
-# 当遇到问题时
-handle_task_blocker() {
-  local issue="$1"
-  local current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  
-  cat >> .claude/context/current-task.md << EOF
-
-### 问题记录 - $current_time
-**问题描述：** $issue
-**影响评估：** [待分析]
-**解决方案：** [待制定]
-**状态：** 待解决
-EOF
-
-  # 可以调用问题分析智能体
-  # 提供解决建议
-}
-```
-
-## 任务完成检查
-
-### 验收标准验证
-```bash
-# 检查任务的所有验收标准
-validate_acceptance_criteria() {
-  local task_file="$1"
-  local criteria=$(sed -n '/^## 验收标准/,/^## /p' "$task_file" | grep "^- \[ \]")
-  
-  echo "📋 验收标准检查："
-  echo "$criteria" | while read criterion; do
-    echo "$criterion"
-    echo "   请确认此标准是否已满足..."
-  done
-}
-```
-
-### 影响分析
-```bash
-# 分析任务完成对其他任务的影响
-analyze_completion_impact() {
-  echo "🔍 分析任务完成的影响..."
-  
-  # 检查依赖此任务的其他任务
-  local dependent_tasks=$(grep -l "依赖:.*$ARGUMENTS" .claude/epics/*/*.md)
-  if [ -n "$dependent_tasks" ]; then
-    echo "📌 以下任务现在可以开始："
-    echo "$dependent_tasks" | while read task; do
-      task_name=$(grep "^名称:" "$task" | sed 's/^名称: *//')
-      echo "  - $task_name"
-    done
-  fi
-}
-```
-
-## 任务完成流程
-
-### 标记任务完成
-```bash
-complete_task() {
-  local current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  
-  # 更新任务状态
-  sed -i.bak "s/^状态:.*/状态: 已完成/" "$task_file"
-  sed -i.bak "s/^最后更新:.*/最后更新: $current_time/" "$task_file"
-  
-  # 添加完成时间
-  if ! grep -q "^完成时间:" "$task_file"; then
-    sed -i.bak "/^最后更新:/a\\
-完成时间: $current_time" "$task_file"
-  fi
-  
-  rm "${task_file}.bak"
-  
-  # 更新当前任务上下文
-  echo "任务于 $current_time 完成" >> .claude/context/current-task.md
-}
-```
-
-### 自动触发反思
-```bash
-# 任务完成后自动进行反思
-echo "🤔 任务完成，开始自我反思..."
-/dd:reflect-on-changes
-```
-
 ## 输出格式
 
-### 任务开始确认
 ```markdown
 🚀 开始执行任务：$task_name
 
 📋 任务信息：
   - 任务ID：$ARGUMENTS
-  - 优先级：{优先级}
-  - 预估工作量：{预估小时数}小时
-  - 并行状态：{可否并行}
+  - Epic：$epic_name
+  - 开始时间：$current_time
 
 📊 依赖状态：
   ✅ 所有依赖任务已完成
-  或
-  ⚠️ 依赖任务：任务001（状态：进行中）
 
 🎯 执行计划：
   1. 任务分析和方案制定
-  2. 分步骤实施
-  3. 验证和测试
+  2. 分步骤实施（用户执行）
+  3. 验证和测试（用户执行）
   4. 完成和反思
 
 📁 工作空间：
   - 任务上下文：.claude/context/current-task.md
-  - 任务文件：{任务文件路径}
+  - 任务文件：$task_file
 
-💡 提醒：
-  - 严格遵循绝对规则
-  - 只提供实施建议，不直接修改代码
-  - 遇到问题及时记录和寻求帮助
-```
+💡 重要提醒：
+  - AI严格遵循绝对安全规则
+  - 只提供分析和实施建议
+  - 所有代码修改由用户执行
+  - 禁止git操作和远程仓库访问
 
-### 进度更新通知
-```markdown
-📈 任务进度更新：$task_name
-
-✅ 已完成：
-  - 步骤1：{描述}
-  - 步骤2：{描述}
-
-🔄 进行中：
-  - 步骤3：{描述}（进度：60%）
-
-⏳ 待完成：
-  - 步骤4：{描述}
-  - 步骤5：{描述}
-
-⏰ 预计完成时间：{预估时间}
+🎯 下一步操作：
+  - 继续任务: /dd:task-resume $ARGUMENTS
+  - 暂停任务: /dd:task-pause $ARGUMENTS  
+  - 完成任务: /dd:task-finish $ARGUMENTS
 ```
 
 ## 错误处理
 
 ### 任务不存在
-```markdown
+```
 ❌ 任务不存在：$ARGUMENTS
 
-可能的原因：
-1. 任务ID错误
-2. 任务尚未创建
-3. 任务文件已移动或删除
-
 建议操作：
-- 运行 /dd:status 查看可用任务
-- 运行 /dd:epic-list 查看所有执行计划
+- 运行 /dd:task-list 查看所有任务
+- 运行 /dd:epic-list 查看所有Epic
 - 确认任务ID格式正确
 ```
 
 ### 依赖未满足
-```markdown
+```
 ⚠️ 依赖条件未满足
 
 依赖任务状态：
-- 任务001：进行中（需要：已完成）
-- 任务003：待开始（需要：已完成）
+{动态显示具体的依赖任务和状态}
 
 建议操作：
 1. 先完成依赖任务
 2. 确认任务可以并行执行
-3. 联系团队确认依赖关系
 ```
 
-## 最佳实践
+## 安全约束
 
-### 任务执行原则
-1. **小步快跑** - 将复杂任务分解为小步骤
-2. **持续验证** - 每个步骤完成后进行验证
-3. **及时记录** - 记录问题、决策和解决方案
-4. **保持沟通** - 遇到阻碍及时寻求帮助
-
-### 质量保证
-1. **遵循规范** - 严格遵循编码规范和架构原则
-2. **考虑影响** - 评估变更对其他组件的影响
-3. **文档同步** - 保持文档与代码变更同步
-4. **测试覆盖** - 确保变更有适当的测试（由用户执行）
+严格遵循DD系统绝对规则：
+1. **禁止git操作** - 不执行任何git命令
+2. **禁止远程操作** - 不访问GitHub等远程仓库
+3. **文件操作限制** - 只能在.claude/目录内修改文件
+4. **用户控制原则** - AI只提供分析建议，用户保持完全控制权

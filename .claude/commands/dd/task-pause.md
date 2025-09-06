@@ -18,11 +18,19 @@ allowed-tools: Read, Edit, LS
 
 ### 1. 任务状态验证
 ```bash
-# 查找任务文件
-task_file=$(find .claude/epics -name "${ARGUMENTS}.md" | head -1)
+# 解析任务ID格式：prd_name:task_num
+if [[ "$ARGUMENTS" != *:* ]]; then
+  echo "❌ 任务ID格式错误，应为：<PRD名称>:<任务编号>"
+  echo "示例：用户认证系统:001"
+  exit 1
+fi
+
+prd_name="${ARGUMENTS%%:*}"
+task_num="${ARGUMENTS##*:}"
+task_file=".claude/epics/$prd_name/$task_num.md"
 
 if [ ! -f "$task_file" ]; then
-  echo "❌ 任务不存在：$ARGUMENTS"
+  echo "❌ 任务不存在：$task_file"
   echo "💡 运行 /dd:task-list 查看所有任务"
   exit 1
 fi
