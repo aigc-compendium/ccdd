@@ -1,0 +1,18 @@
+# UI 设计文件目录
+
+此目录用于存放项目的 UI 设计图片和相关资源文件。
+
+## 支持的文件格式
+- PNG, JPG, JPEG - 位图设计稿
+- SVG - 矢量图形和图标
+- WebP - 优化的图片格式
+- GIF - 动画演示
+
+## 文件命名建议
+- 按功能模块命名：`login-page.png`
+- 按组件命名：`button-variants.png` 
+- 按任务ID命名：`task-001-ui.png`
+- 包含状态：`modal-open-closed.png`
+
+## 目录结构建议
+简单扁平化结构即可，按功能或任务命名文件

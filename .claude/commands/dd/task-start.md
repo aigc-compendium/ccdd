@@ -66,6 +66,22 @@ task_name=$(grep "^名称:" "$task_file" | sed 's/^名称: *//')
 task_description=$(sed -n '/^## 目标/,/^## /p' "$task_file" | head -n -1 | tail -n +2)
 ```
 
+#### UI 图片智能识别（自动触发）
+```bash
+# 检测任务是否为UI开发相关任务
+ui_keywords="UI|界面|页面|组件|前端|设计|样式|布局|响应式|React|Vue|HTML|CSS"
+task_full_content=$(cat "$task_file")
+
+if echo "$task_full_content" | grep -iE "$ui_keywords" > /dev/null; then
+  echo "🎨 检测到UI开发任务，开始智能识别相关设计图片..."
+  
+  # 使用UI分析智能体扫描和分析设计图片
+  # 调用 Task 工具使用 UI 分析智能体
+  echo "📸 扫描设计图片: 任务ID=$ARGUMENTS, 任务名称=$task_name"
+  echo "🔍 使用UI分析智能体分析匹配的设计图片..."
+fi
+```
+
 #### 创建任务工作空间
 ```bash
 # 在 .claude/context/ 中创建当前任务上下文
@@ -78,6 +94,7 @@ cat > .claude/context/current-task.md << EOF
 开始时间: $current_time
 状态: 进行中
 上次更新: $current_time
+UI任务: $(echo "$task_full_content" | grep -iE "$ui_keywords" > /dev/null && echo "是" || echo "否")
 ---
 
 # 当前任务：$task_name
@@ -103,6 +120,41 @@ EOF
 ```
 
 ### 2. 任务分析阶段
+
+#### UI 任务智能体调用（自动触发）
+**如果检测到UI任务，执行以下调用：**
+```yaml
+Task:
+  description: "UI设计图片分析"
+  subagent_type: "ui-analyzer"
+  prompt: |
+    为任务「{任务名称}」(ID: {任务ID}) 执行UI设计分析：
+    
+    任务详情：
+    {任务完整内容}
+    
+    请执行：
+    1. 扫描以下目录中的设计图片：
+       - .claude/designs/
+       - ./designs/
+       
+    2. 匹配相关图片文件：
+       - 按任务ID匹配: {任务ID}*.*
+       - 按任务名称匹配: *{关键词}*.*
+       
+    3. 深度分析找到的设计图片：
+       - 布局结构和组件层次
+       - 色彩方案和设计规范
+       - 交互状态和响应式要求
+       - 文字内容和图标元素
+       
+    4. 生成UI开发上下文文档到：
+       .claude/context/ui-context-{任务ID}.md
+       
+    5. 提供代码实现建议和组件模板
+    
+    如未找到相关图片，引导用户将设计文件放入指定目录。
+```
 
 #### 使用智能体深度分析
 ```yaml
