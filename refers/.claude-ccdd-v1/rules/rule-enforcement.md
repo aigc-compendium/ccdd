@@ -264,7 +264,7 @@ scan_system_integrity() {
     # 检查核心文件
     local required_files=(
         ".claude/CLAUDE.md"
-        ".claude/rules/absolute-rules.md"
+        ".claude/rules/absolute.md"
         ".claude/rules/git-safety.md"
         ".claude/commands/dd/help.md"
     )

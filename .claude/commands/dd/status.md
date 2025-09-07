@@ -1,11 +1,58 @@
 ---
-allowed-tools: Bash
+allowed-tools: Read, Bash, Glob
 ---
 
-Run `bash .claude/scripts/dd/status.sh` using a sub-agent and show me the complete output.
+# DD 项目状态概览
 
-- DO NOT truncate.
-- DO NOT collapse.
-- DO NOT abbreviate.
-- Show ALL lines in full.
-- DO NOT print any other comments.
+显示项目整体开发状态、进度统计和健康度评估.
+
+## 功能概述
+
+提供全面的项目状态报告:
+
+- 功能开发进度统计
+- 任务执行状态概览
+- Git 仓库状态检查
+- 系统健康度评估
+
+## 状态报告格式
+
+```
+🎯 {项目名称} - 项目状态报告
+========================================
+
+📊 开发进度统计:
+  总功能数: {X} 个
+  已完成: {Y} 个 ({Z}%)
+  开发中: {A} 个
+  未开始: {B} 个
+
+  总任务数: {C} 个
+  已完成: {D} 个 ({E}%)
+  进行中: {F} 个
+
+🔄 活跃开发:
+  当前功能: {当前开发功能}
+  当前任务: {当前任务}
+  最后更新: {时间}
+
+📋 Git 状态:
+  分支: {当前分支}
+  未提交文件: {数量}
+  未推送提交: {数量}
+
+🏥 系统健康度: {优秀|良好|需要关注}
+```
+
+## 执行方式
+
+1. 扫描 `.claude/features/` 目录
+2. 统计功能和任务状态
+3. 检查 Git 仓库状态
+4. 生成综合报告
+
+## 健康度评估
+
+- **优秀**: 进度正常, 无阻塞问题
+- **良好**: 轻微延迟, 整体可控
+- **需要关注**: 存在阻塞或严重延迟
