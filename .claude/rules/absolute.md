@@ -105,7 +105,7 @@
 
 ### 必须使用智能体的场景
 
-- **项目上下文**: `/dd:chat` 时自动调用 context-injector
+- **项目上下文**: `/dd:chat` 时自动调用 chat-assistant
 - **代码分析**: 使用 Task 工具调用 code-analyzer
 - **功能设计**: 使用 Task 工具调用 feature-designer
 - **任务执行**: 使用 Task 工具调用 task-executor

@@ -35,7 +35,7 @@
 
 系统使用专门的子智能体进行上下文优化:
 
-- **context-injector**: 项目上下文注入, 为后续对话提供项目感知能力
+- **chat-assistant**: 基于持久上下文的对话
 - **code-analyzer**: 深度代码分析、逻辑跟踪、漏洞检测
 - **feature-designer**: 功能需求分析和设计方案制定
 - **task-executor**: 任务执行和进度跟踪管理
@@ -45,7 +45,7 @@
 
 ## 智能体使用要求
 
-- **项目上下文**: `/dd:chat` 自动调用 context-injector
+- **项目上下文**: `/dd:chat` 自动调用 chat-assistant
 - **代码分析**: 使用 Task 工具调用 code-analyzer
 - **功能设计**: 使用 Task 工具调用 feature-designer
 - **任务执行**: 使用 Task 工具调用 task-executor

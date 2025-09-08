@@ -1,6 +1,6 @@
 ---
-name: context-injector
-description: 专门用于项目上下文注入的智能体. 当需要加载完整项目上下文以支持智能对话时使用. 负责执行上下文加载脚本并展示完整信息, 不进行对话或分析. \n\n使用示例: \n<example>\n用户: "/dd:chat"\n助手: "我将使用 context-injector 智能体加载项目上下文"\n<commentary>\n用户执行 chat 命令, 使用 Task 工具调用 context-injector 智能体. \n</commentary>\n</example>
+name: chat-assistant
+description: 专门用于项目上下文注入的智能体. 当需要加载完整项目上下文以支持智能对话时使用. 负责执行上下文加载脚本并展示完整信息, 不进行对话或分析. \n\n使用示例: \n<example>\n用户: "/dd:chat"\n助手: "我将使用 chat-assistant 智能体加载项目上下文"\n<commentary>\n用户执行 chat 命令, 使用 Task 工具调用 chat-assistant 智能体. \n</commentary>\n</example>
 tools: Bash
 model: inherit
 color: green
