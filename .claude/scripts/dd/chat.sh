@@ -68,20 +68,20 @@ if [ -d ".claude/features" ]; then
             feature_name=$(basename "$feature_dir")
             echo "--- 功能: $feature_name ---"
             
-            if [ -f "$feature_dir/feature.md" ]; then
+            if [ -f "$feature_dir/overview.md" ]; then
                 echo "🎯 功能详情:"
                 # 读取功能的关键信息
-                grep -E "^(name|status|progress|tasks_total|tasks_completed):" "$feature_dir/feature.md" 2>/dev/null || echo "元数据不完整"
+                grep -E "^(name|status|progress|tasks_total|tasks_completed):" "$feature_dir/overview.md" 2>/dev/null || echo "元数据不完整"
                 echo ""
                 
                 # 读取功能目标
-                if grep -q "## 功能目标" "$feature_dir/feature.md"; then
+                if grep -q "## 功能目标" "$feature_dir/overview.md"; then
                     echo "📝 功能目标:"
-                    sed -n '/## 功能目标/,/## /p' "$feature_dir/feature.md" | head -n -1
+                    sed -n '/## 功能目标/,/## /p' "$feature_dir/overview.md" | head -n -1
                     echo ""
                 fi
             else
-                echo "❌ $feature_name 缺少 feature.md 文件"
+                echo "❌ $feature_name 缺少 overview.md 文件"
                 echo ""
             fi
             

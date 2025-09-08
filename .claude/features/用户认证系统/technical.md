@@ -1,6 +1,5 @@
 ---
 complexity: 中等
-estimated_hours: 40
 tech_stack: [Node.js, Express, JWT, bcrypt, MongoDB, React]
 dependencies: []
 ---

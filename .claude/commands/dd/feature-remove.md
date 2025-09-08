@@ -32,7 +32,7 @@ allowed-tools: Read, Bash, Glob
 ```
 ⚠️ 准备删除功能: {功能名}
 📁 将删除以下内容:
-  - 功能文档 (feature.md, technical.md, testing.md)
+  - 功能文档 (overview.md, technical.md, testing.md)
   - 所有任务文件 ({N}个任务)
   - 功能目录
 

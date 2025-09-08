@@ -43,7 +43,7 @@ allowed-tools: Read, Glob
 ## 执行方式
 
 1. 扫描 `.claude/features/` 目录
-2. 读取每个功能的 `feature.md` 元数据
+2. 读取每个功能的 `overview.md` 元数据
 3. 统计任务完成情况
 4. 识别依赖和阻塞状态
 5. 生成状态报告

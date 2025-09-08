@@ -70,8 +70,8 @@
 **帮助状态类**: `/dd:help` `/dd:status` `/dd:version`
 **项目初始化类**: `/dd:init` `/dd:init-exist` `/dd:prd`
 **架构管理类**: `/dd:framework-init` `/dd:framework-audit` `/dd:framework-adjust` `/dd:prd-decompose`
-**功能管理类**: `/dd:feature-add` `/dd:feature-start` `/dd:feature-list` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
-**任务管理类**: `/dd:task-decompose` `/dd:task-start` `/dd:task-finish` `/dd:task-audit`
+**功能管理类**: `/dd:feature-add` `/dd:feature-decompose` `/dd:feature-start` `/dd:feature-update` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
+**任务管理类**: `/dd:task-start` `/dd:task-update` `/dd:task-audit`
 **代码质量类**: `/dd:code-reflect`
 
 ### 典型工作流程
@@ -81,7 +81,7 @@
 /dd:prd                      # 需求设计
 /dd:framework-init           # 架构设计
 /dd:feature-add 用户认证      # 添加功能
-/dd:task-decompose 用户认证   # 任务分解
+/dd:feature-decompose 用户认证 # 功能分解
 /dd:feature-start 用户认证    # 开始开发
 /dd:code-reflect            # 代码反思
 /dd:chat                    # 技术咨询

@@ -10,14 +10,21 @@ allowed-tools: Task, Read, Write, Bash
 
 ### 文档生成规范
 
-#### 中英文间距要求
+#### 文档格式要求
 
 所有生成的文档内容必须遵循以下格式规范：
 
 - **中英文混合文本**：英文单词与中文字符之间必须有一个空格
 - **示例**：`这是一个 JWT 认证系统` 而不是 `这是一个JWT认证系统`
+- **列表项格式**：多个列表项必须分行显示，每行以 "- " 开头
+- **正确示例**：
+  ```
+  - 用户注册功能
+  - 用户登录功能
+  - 密码重置功能
+  ```
+- **错误示例**：`用户注册功能|用户登录功能|密码重置功能`
 - **适用范围**：所有功能描述、技术方案、测试用例等文档
-- **特殊情况**：标点符号前后不需要额外空格
 
 ### 1. 深度需求对话
 
@@ -61,20 +68,17 @@ allowed-tools: Task, Read, Write, Bash
 feature_data=$(cat << 'EOF'
 {
   "goal": "从对话中提取的功能目标描述",
-  "user_value": "从对话中明确的用户价值",
-  "core_features": "核心功能点描述",
-  "feature_boundary_include": "包含的功能范围",
-  "feature_boundary_exclude": "明确排除的功能范围",
-  "use_scenarios": "具体使用场景描述",
-  "acceptance_criteria": "详细的验收标准",
-  "complexity": "简单|中等|复杂",
-  "estimated_hours": "预估工时数字",
+  "user_value": "从对话中明确的用户价值（markdown 列表格式，每行以 '- ' 开头）",
+  "core_features": "核心功能点描述（markdown 列表格式，每行以 '- ' 开头）",
+  "feature_boundary_include": "包含的功能范围（markdown 列表格式，每行以 '- ' 开头）",
+  "feature_boundary_exclude": "明确排除的功能范围（markdown 列表格式，每行以 '- ' 开头）",
+  "use_scenarios": "具体使用场景描述（markdown 列表格式，每行以 '- ' 开头）",
   "dependencies": "技术或功能依赖描述"
 }
 EOF
 )
 
-bash .claude/scripts/dd/feature-add-feature.sh "<功能名>" "$feature_data"
+bash .claude/scripts/dd/generator/generate-feature-overview.sh "<功能名>" "$feature_data"
 ```
 
 #### 4.2 生成技术方案文档
@@ -97,30 +101,32 @@ technical_data=$(cat << 'EOF'
 EOF
 )
 
-bash .claude/scripts/dd/feature-add-technical.sh "<功能名>" "$technical_data"
+bash .claude/scripts/dd/generator/generate-feature-technical.sh "<功能名>" "$technical_data"
 ```
 
-#### 4.3 生成测试用例文档
+#### 4.3 生成验收标准文档
 
-基于对话中的测试策略讨论, 构建 JSON 数据并调用脚本:
+基于对话中的功能需求和验收要求, 构建 JSON 数据并调用脚本:
+
+**重要验收原则**:
+
+- **主要重点**: 功能点验收是核心，每个具体功能都要有明确的验收标准
+- **按需补充**: 性能、安全性、其他要求仅在该功能确实需要时才添加
+- **实际情况**: 根据功能的实际特点和复杂度确定验收维度，避免千篇一律
 
 ```bash
-testing_data=$(cat << 'EOF'
+acceptance_data=$(cat << 'EOF'
 {
-  "test_strategy": "从对话中确定的测试策略",
-  "unit_tests": "单元测试用例设计",
-  "integration_tests": "集成测试用例设计",
-  "e2e_tests": "端到端测试用例设计",
-  "performance_tests": "性能测试计划",
-  "security_tests": "安全测试用例",
-  "test_data": "测试数据准备策略",
-  "test_environment": "测试环境配置要求",
-  "coverage_requirements": "代码覆盖率目标"
+  "functional_requirements": "核心功能点验收（markdown列表格式，详细列出每个功能点的验收标准）",
+  "performance_requirements": "性能验收标准（仅当功能有性能要求时提供，markdown列表格式）",
+  "security_requirements": "安全性验收标准（仅当功能涉及安全时提供，markdown列表格式）",
+  "other_requirements": "其他验收要求（根据功能特点补充，如数据完整性、业务规则等，markdown列表格式）",
+  "acceptance_criteria": "综合验收条件（整体功能完成的标准，markdown列表格式）"
 }
 EOF
 )
 
-bash .claude/scripts/dd/feature-add-testing.sh "<功能名>" "$testing_data"
+bash .claude/scripts/dd/generator/generate-acceptance.sh "<功能名>" "$acceptance_data"
 ```
 
 #### 4.4 完成功能创建
@@ -138,10 +144,15 @@ conversation_data=$(cat << 'EOF'
 EOF
 )
 
-bash .claude/scripts/dd/feature-add-finish.sh "<功能名>" "$conversation_data"
 ```
 
-执行最终完成操作、验证文档生成结果并记录对话历史, 提供下一步操作建议
+**第五步**: 完成功能创建并提供后续建议
+
+AI 直接执行以下操作:
+1. 验证所有功能文档生成完成
+2. 初始化功能状态为"未开始"
+3. 记录功能创建对话历史到会话文件
+4. 提供后续操作建议（如功能分解、开始开发等）
 
 **重要**: 必须传递包含对话内容的 JSON 数据作为第二个参数:
 
@@ -177,15 +188,18 @@ _(继续深度对话, 直到明确所有细节)_
 
 ## AI 执行的关键原则
 
-**参数说明**:
+**JSON 数据格式要求**:
 
-- `--goal`: 功能目标的具体描述
-- `--value`: 为用户提供的价值描述
-- `--features`: 核心功能点（用|分隔）
-- `--scenarios`: 用户使用场景（用|分隔）
-- `--criteria`: 验收标准（用|分隔）
-- `--overwrite`: 覆盖现有文件（用于 refactory 场景）
-- 其他参数可选, 有默认值
+**重要**: JSON 中的列表类型数据必须使用正确的 markdown 格式:
+
+```json
+{
+  "core_features": "- 用户注册功能\n- 用户登录功能\n- 密码重置功能",
+  "use_scenarios": "- 新用户注册流程\n- 已有用户登录场景\n- 忘记密码重置场景"
+}
+```
+
+**不要使用管道符分隔**: `"core_features": "用户注册功能|用户登录功能|密码重置功能"`
 
 ### 参数化脚本的正确使用
 
@@ -193,61 +207,77 @@ _(继续深度对话, 直到明确所有细节)_
 
 1. **不要省略参数**: 每个重要信息都必须通过对应参数传递
 2. **使用实际内容**: 不要使用占位符, 使用从对话中获得的实际内容
-3. **遵循参数格式**: 多个项目用`|`分隔, 技术栈用`,`分隔
-4. **保证内容完整性**: 所有从用户对话中获得的信息都必须体现在最终生成的文档中
+3. **遵循格式要求**: 使用 markdown 列表格式 (每行以 `- ` 开头)
+4. **验收重点原则**:
+   - 功能点验收是核心重点，要详细具体
+   - 性能、安全等其他验收根据功能实际情况补充
+   - 避免为了完整性而添加不相关的验收项
+5. **保证内容完整性**: 所有从用户对话中获得的信息都必须体现在最终生成的文档中
 
 ### 执行示例
 
-假设用户要求创建"用户认证系统", 经过对话得到以下信息:
-
-- 功能目标: 实现安全的用户登录认证
-- 用户价值: 为用户提供安全便捷的身份验证服务
-- 核心功能: 用户注册、用户登录、密码重置、邮箱验证
-- 技术栈: Node.js、React、JWT、MongoDB
-
-则 AI 必须这样调用:
+假设用户要求创建"用户认证系统", 经过对话得到以下信息后，AI必须构建正确的JSON格式:
 
 ```bash
 # 第一步: 生成功能文档
-bash .claude/scripts/dd/feature-add-feature.sh "用户认证系统" \
-  --goal "实现安全的用户登录认证" \
-  --value "为用户提供安全便捷的身份验证服务" \
-  --features "用户注册功能|用户登录功能|密码重置功能|邮箱验证功能" \
-  --scenarios "新用户注册|老用户登录|忘记密码重置" \
-  --complexity "中等" \
-  --hours "40"
+feature_data=$(cat << 'EOF'
+{
+  "goal": "实现安全的用户登录认证",
+  "user_value": "- 为用户提供安全便捷的身份验证服务\n- 保护用户账户和个人信息安全",
+  "core_features": "- 用户注册功能\n- 用户登录功能\n- 密码重置功能\n- 邮箱验证功能",
+  "feature_boundary_include": "- 基础的注册登录流程\n- 密码重置功能\n- 邮箱验证机制",
+  "feature_boundary_exclude": "- 第三方登录集成\n- 多因素认证\n- 高级权限管理",
+  "use_scenarios": "- 新用户注册流程\n- 已有用户登录场景\n- 忘记密码重置场景"
+}
+EOF
+)
+
+bash .claude/scripts/dd/generator/generate-feature-overview.sh "用户认证系统" "$feature_data"
 
 # 第二步: 生成技术文档
-bash .claude/scripts/dd/feature-add-technical.sh "用户认证系统" \
-  --tech-stack "Node.js,React,JWT,MongoDB" \
-  --complexity "中等" \
-  --hours "40" \
-  --arch "前后端分离架构, JWT令牌认证" \
-  --data "User表存储用户信息, 包含邮箱、密码哈希等字段" \
-  --api "RESTful API设计, 包含注册、登录、重置密码接口" \
-  --security "密码哈希存储, JWT令牌验证, 邮箱验证机制"
+technical_data=$(cat << 'EOF'
+{
+  "tech_stack": "Node.js,React,JWT,MongoDB",
+  "architecture_design": "前后端分离架构, JWT令牌认证",
+  "data_models": "User表存储用户信息, 包含邮箱、密码哈希等字段",
+  "api_design": "RESTful API设计, 包含注册、登录、重置密码接口",
+  "security_considerations": "密码哈希存储, JWT令牌验证, 邮箱验证机制"
+}
+EOF
+)
 
-# 第三步: 生成测试文档
-bash .claude/scripts/dd/feature-add-testing.sh "用户认证系统" \
-  --strategy "分层测试, 从单元测试到端到端测试" \
-  --unit "密码哈希函数测试|JWT令牌生成验证测试" \
-  --integration "注册API集成测试|登录API集成测试" \
-  --e2e "完整注册流程测试|完整登录流程测试" \
-  --coverage "90"
+bash .claude/scripts/dd/generator/generate-feature-technical.sh "用户认证系统" "$technical_data"
+
+# 第三步: 生成验收文档
+# 注意：以下示例体现了验收原则 - 重点是功能点验收，其他根据实际需要补充
+acceptance_data=$(cat << 'EOF'
+{
+  "functional_requirements": "- 用户可以成功注册新账户并收到确认邮件\n- 用户可以使用正确的邮箱和密码登录系统\n- 用户可以通过邮箱重置密码并设置新密码\n- 邮箱验证链接功能正常且有效期合理",
+  "performance_requirements": "- 登录响应时间小于2秒\n- 注册流程完成时间小于30秒",
+  "security_requirements": "- 密码使用bcrypt加密存储\n- JWT token生成和验证机制安全\n- 防止暴力破解攻击",
+  "other_requirements": "- 输入验证和错误提示清晰准确\n- 邮件发送功能稳定可靠",
+  "acceptance_criteria": "- 完整的注册登录流程可以正常工作\n- 用户数据安全得到保障\n- 系统响应性能满足用户体验要求"
+}
+EOF
+)
+
+bash .claude/scripts/dd/generator/generate-acceptance.sh "用户认证系统" "$acceptance_data"
 
 # 第四步: 完成创建
-bash .claude/scripts/dd/feature-add-finish.sh "用户认证系统" '{
-  "conversation": "用户: 我想添加一个用户认证系统. \nAI: 让我深入了解一下这个功能的需求...\n[完整的对话过程记录]"
-}'
+# AI 直接执行功能创建完成逻辑:
+# 1. 验证文档生成完整性
+# 2. 初始化功能状态
+# 3. 记录会话历史
+# 4. 提供后续建议
 ```
 
 ## 输出规范
 
 确认所有细节后, 会按顺序生成:
 
-1. **feature.md** - 完整的功能需求文档（包含对话中的所有功能信息）
+1. **overview.md** - 完整的功能需求文档（包含对话中的所有功能信息）
 2. **technical.md** - 详细的技术实现方案（包含对话中的技术方案）
-3. **testing.md** - 全面的测试用例集（包含对话中的测试策略）
+3. **acceptance.md** - 功能验收标准文档（包含验收要点和标准）
 4. **完成提示** - 下一步操作建议
 
 ## 质疑维度

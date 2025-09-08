@@ -22,7 +22,7 @@ allowed-tools: Task, Read, Write, Edit, Bash, Glob, Grep
 执行快速项目扫描, 获取项目概览信息:
 
 ```bash
-bash .claude/scripts/dd/project-scan.sh
+bash .claude/scripts/dd/query/project-scan.sh
 ```
 
 扫描内容包括:

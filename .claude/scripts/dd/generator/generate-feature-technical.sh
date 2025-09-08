@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# DD 技术方案文档生成脚本
+# DD 技术方案文档生成器
 # 基于 JSON 数据生成 technical.md 技术设计文档
 
 set -e
@@ -11,13 +11,13 @@ technical_data="$2"
 
 if [ -z "$FEATURE_NAME" ]; then
     echo "ERROR: Missing feature name parameter"
-    echo "用法: bash feature-add-technical.sh '<feature_name>' '<json_data>'"
+    echo "用法: bash generate-technical.sh '<feature_name>' '<json_data>'"
     exit 1
 fi
 
 if [ -z "$technical_data" ] || [ "$technical_data" = "null" ]; then
     echo "ERROR: Missing JSON data parameter"
-    echo "用法: bash feature-add-technical.sh '<feature_name>' '<json_data>'"
+    echo "用法: bash generate-technical.sh '<feature_name>' '<json_data>'"
     exit 1
 fi
 

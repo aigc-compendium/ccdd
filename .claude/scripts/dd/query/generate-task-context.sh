@@ -74,9 +74,9 @@ if [ -d ".claude/features" ]; then
         echo "--- FEATURE_LIST ---"
         find ".claude/features" -maxdepth 1 -type d ! -path ".claude/features" | while read feature_dir; do
             feature_name=$(basename "$feature_dir")
-            if [ -f "$feature_dir/feature.md" ]; then
-                status=$(grep "^status:" "$feature_dir/feature.md" 2>/dev/null | sed 's/^status: *//' || echo "未知")
-                progress=$(grep "^progress:" "$feature_dir/feature.md" 2>/dev/null | sed 's/^progress: *//' || echo "0")
+            if [ -f "$feature_dir/overview.md" ]; then
+                status=$(grep "^status:" "$feature_dir/overview.md" 2>/dev/null | sed 's/^status: *//' || echo "未知")
+                progress=$(grep "^progress:" "$feature_dir/overview.md" 2>/dev/null | sed 's/^progress: *//' || echo "0")
                 echo "$feature_name: [$status] $progress%"
             else
                 echo "$feature_name: [无状态文件]"
@@ -101,9 +101,9 @@ if [ -f "$FEATURE_DIR/technical.md" ]; then
         echo "$feature_deps" | sed 's/\[//g' | sed 's/\]//g' | sed 's/,/ /g' | while read -r dep; do
             dep=$(echo "$dep" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//' | sed 's/"//g')
             if [ -n "$dep" ] && [ -d ".claude/features/$dep" ]; then
-                if [ -f ".claude/features/$dep/feature.md" ]; then
-                    dep_status=$(grep "^status:" ".claude/features/$dep/feature.md" 2>/dev/null | sed 's/^status: *//' || echo "未知")
-                    dep_progress=$(grep "^progress:" ".claude/features/$dep/feature.md" 2>/dev/null | sed 's/^progress: *//' || echo "0")
+                if [ -f ".claude/features/$dep/overview.md" ]; then
+                    dep_status=$(grep "^status:" ".claude/features/$dep/overview.md" 2>/dev/null | sed 's/^status: *//' || echo "未知")
+                    dep_progress=$(grep "^progress:" ".claude/features/$dep/overview.md" 2>/dev/null | sed 's/^progress: *//' || echo "0")
                     echo "DEPENDENCY_$dep: [$dep_status] $dep_progress%"
                 else
                     echo "DEPENDENCY_$dep: [状态文件缺失]"

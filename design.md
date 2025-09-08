@@ -35,7 +35,6 @@
 │   ├── status.md          # dd:status
 │   ├── feature-add.md     # dd:feature-add
 │   ├── feature-start.md   # dd:feature-start
-│   ├── feature-list.md    # dd:feature-list
 │   ├── feature-remove.md  # dd:feature-remove
 │   ├── feature-refactory.md # dd:feature-refactory
 │   ├── feature-status.md  # dd:feature-status
@@ -51,9 +50,9 @@
 │   └── acceptance.md     # 验收规则 - 功能和任务验收标准
 ├── features/              # 功能管理
 │   └── <feature-name>/   # 单个功能目录
-│       ├── feature.md    # 功能详细描述
+│       ├── overview.md   # 功能详细描述
 │       ├── technical.md  # 技术方案
-│       ├── testing.md    # 人工测试用例
+│       ├── acceptance.md # 功能验收标准
 │       └── tasks/        # 任务文件夹
 │           ├── 001.md    # 任务文件
 │           ├── 002.md
@@ -161,7 +160,6 @@
     - 检查代码状态与功能状态一致性 → 不匹配则更新状态
   - **执行**：调用任务级命令执行具体任务
 
-- `dd:feature-list`: 显示所有功能列表和状态概览
 - `dd:feature-remove`: 删除功能
 - `dd:feature-refactory`: 基于用户需求重构功能，重新生成功能文档
 - `dd:feature-status`: 查看功能状态和进度

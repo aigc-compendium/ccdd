@@ -49,8 +49,8 @@ calculate_basic_progress() {
         
         # 读取功能状态
         local feature_status="未开始"
-        if [ -f "$feature_dir/feature.md" ]; then
-          feature_status=$(grep "^status:" "$feature_dir/feature.md" 2>/dev/null | cut -d: -f2- | xargs)
+        if [ -f "$feature_dir/overview.md" ]; then
+          feature_status=$(grep "^status:" "$feature_dir/overview.md" 2>/dev/null | cut -d: -f2- | xargs)
         fi
         
         case "$feature_status" in
@@ -161,8 +161,8 @@ show_status_report() {
     echo "  当前有 $ACTIVE_FEATURES 个功能在开发中"
     # 列出正在开发的功能
     for feature_dir in .claude/features/*/; do
-      if [ -f "$feature_dir/feature.md" ]; then
-        local status=$(grep "^status:" "$feature_dir/feature.md" 2>/dev/null | cut -d: -f2- | xargs)
+      if [ -f "$feature_dir/overview.md" ]; then
+        local status=$(grep "^status:" "$feature_dir/overview.md" 2>/dev/null | cut -d: -f2- | xargs)
         if [[ "$status" =~ ^(开发中|测试中)$ ]]; then
           local feature_name=$(basename "$feature_dir")
           echo "    • $feature_name ($status)"
@@ -194,7 +194,9 @@ show_status_report() {
   elif [ $UNSTAGED_FILES -gt 0 ]; then
     echo "💡 建议操作: "
     echo "   /dd:code-reflect   - 分析代码变更"
-    echo "   git add && git commit  - 提交变更"
+    echo "   🤖 获取 AI commit message 建议:"
+    echo "   bash .claude/scripts/dd/utils/commit-message-helper.sh suggest"
+    echo "   git add && git commit -m '<AI建议>' - 用户手动提交 (AI 禁止执行)"
   fi
 }
 

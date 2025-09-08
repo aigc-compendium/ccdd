@@ -44,7 +44,7 @@ allowed-tools: Task, Read, Write, Edit, Bash
 
 - 执行 feature-add.md 的完整流程
 - 基于重构上下文重新生成三大文档:
-  - feature.md - 重构后的功能描述
+  - overview.md - 重构后的功能描述
   - technical.md - 新的技术实现方案
   - testing.md - 更新的测试策略
 - 保留历史版本进行对比
@@ -95,6 +95,6 @@ allowed-tools: Task, Read, Write, Edit, Bash
 ## 输出规范
 
 - 重构分析报告
-- 更新的完整功能文档集合 (feature.md, technical.md, testing.md)
+- 更新的完整功能文档集合 (overview.md, technical.md, testing.md)
 - 重构执行计划和风险评估
 - 下一步操作建议

@@ -41,16 +41,15 @@ bash .claude/scripts/dd/after-init.sh '<json_data>'
 }
 ```
 
-### feature-add-finish.sh 脚本
+### 功能创建完成处理
 
-**新的调用方式**:
+**新的处理方式**:
+- AI 直接验证文档生成完整性
+- 初始化功能状态为"未开始"  
+- 记录对话历史到会话文件
+- 提供后续操作建议
 
-```bash
-bash .claude/scripts/dd/feature-add-finish.sh '<feature_name>' '<json_data>'
-```
-
-**JSON 数据格式**:
-
+**会话记录格式保持不变**:
 ```json
 {
   "conversation": "完整的功能设计对话内容, 包含需求分析、技术讨论、方案确认等"
@@ -123,7 +122,7 @@ participants: [user, ai]
 
 1. **收集对话内容**: 在整个交互过程中记录用户与 AI 的完整对话
 2. **格式化为 JSON**: 将对话内容和相关信息格式化为规范的 JSON 格式
-3. **传递给脚本**: 在调用 after-init.sh 或 feature-add-finish.sh 时传递 JSON 数据
+3. **传递给处理逻辑**: 在调用 after-init.sh 或功能创建完成时传递 JSON 数据
 
 ## 好处
 

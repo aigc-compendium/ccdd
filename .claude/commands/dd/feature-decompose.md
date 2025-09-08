@@ -2,7 +2,7 @@
 allowed-tools: Task, Write, Read
 ---
 
-# DD 任务分解
+# DD 功能分解
 
 深度分析功能技术实现路径, 按合理性进行任务规划和分解.
 
@@ -19,14 +19,22 @@ allowed-tools: Task, Write, Read
 
 ### 文档生成规范
 
-#### 中英文间距要求
+#### 文档格式要求
 
-所有生成的文档内容必须遵循以下格式规范：
+所有生成的任务文档内容必须遵循以下格式规范：
 
 - **中英文混合文本**：英文单词与中文字符之间必须有一个空格
 - **示例**：`这是一个 API 接口设计` 而不是 `这是一个API接口设计`
-- **适用范围**：所有任务描述、技术细节、验收标准等文档
-- **特殊情况**：标点符号前后不需要额外空格
+- **列表项格式**：所有列表项必须分行显示，每行以 "- " 开头
+- **正确示例**：
+  ```json
+  {
+    "implementation_points": "- 设计数据库表结构\n- 实现数据验证规则\n- 创建数据库索引",
+    "todos": "- 分析功能数据需求\n- 创建数据库迁移脚本\n- 编写单元测试"
+  }
+  ```
+- **错误示例**：`"todos": "分析需求|创建脚本|编写测试"`
+- **适用范围**：所有任务描述、实现要点、验收标准、todo列表等
 
 ### 1. 任务独立性
 
@@ -52,9 +60,9 @@ allowed-tools: Task, Write, Read
 
 通过脚本收集分解所需的全部信息:
 
-- **功能信息** - 调用 `task-add-feature.sh <feature_name>`
-- **技术方案** - 调用 `task-add-technical.sh <feature_name>`
-- **项目上下文** - 调用 `task-add-context.sh <feature_name>`
+- **功能信息** - 直接读取 `.claude/features/<feature_name>/overview.md` 等文件
+- **技术方案** - 直接读取 `.claude/features/<feature_name>/technical.md` 文件
+- **项目上下文** - 调用 `query/generate-task-context.sh <feature_name>`
 
 ### 2. 智能体深度分析
 
@@ -79,7 +87,7 @@ allowed-tools: Task, Write, Read
 基于深度分析结果, 为每个分解的任务调用生成脚本:
 
 ```bash
-bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "<task_id>" '<task_data_json>'
+bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "<task_id>" '<task_data_json>'
 ```
 
 **参数说明**:
@@ -93,21 +101,15 @@ bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "<task_id>" '<task_d
 ```json
 {
   "name": "任务名称",
-  "priority": "高|中|低",
-  "difficulty": "简单|中等|复杂",
-  "estimated_hours": "预估工时",
   "goal": "任务目标描述",
-  "implementation_points": "关键实现要点",
-  "technical_details": "技术细节说明",
-  "dependencies": ["依赖任务1", "依赖任务2"],
-  "todos": ["具体实现项1", "具体实现项2", "具体实现项3"],
-  "acceptance_criteria": ["验收条件1", "验收条件2"]
+  "implementation_points": "关键实现要点（markdown列表格式）",
+  "acceptance_criteria": "验收条件（markdown列表格式）"
 }
 ```
 
 ### 5. 完成处理
 
-调用 `task-decompose-finish.sh <feature_name>` 进行验证和总结
+智能体直接输出分解结果摘要和下一步建议
 
 ## 输出结果
 
@@ -122,11 +124,10 @@ bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "<task_id>" '<task_d
 
 每个任务文件包含:
 
-- YAML 元数据（状态、优先级、工时等）
+- YAML 元数据（任务名、功能名、状态）
 - 任务描述和目标
-- 实现要点和技术细节
+- 实现要点
 - 验收标准
-- Todo 列表
 
 ## 脚本调用序列
 
@@ -134,22 +135,19 @@ bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "<task_id>" '<task_d
 
 ```bash
 # 1. 收集功能信息
-bash .claude/scripts/dd/task-add-feature.sh "<feature_name>"
+# 直接读取功能文档文件：overview.md, technical.md, acceptance.md
 
-# 2. 收集技术方案信息
-bash .claude/scripts/dd/task-add-technical.sh "<feature_name>"
-
-# 3. 收集项目上下文信息
-bash .claude/scripts/dd/task-add-context.sh "<feature_name>"
+# 2. 收集项目上下文信息
+bash .claude/scripts/dd/query/generate-task-context.sh "<feature_name>"
 
 # 4. 生成任务文档（智能体分解后为每个任务调用）
-bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "001" '<task1_json>'
-bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "002" '<task2_json>'
-bash .claude/scripts/dd/task-add-detail.sh "<feature_name>" "003" '<task3_json>'
+bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "001" '<task1_json>'
+bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "002" '<task2_json>'
+bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "003" '<task3_json>'
 # ... 为每个任务调用一次
 
-# 5. 完成验证和总结
-bash .claude/scripts/dd/task-decompose-finish.sh "<feature_name>"
+# 3. 完成验证和总结
+# 智能体直接输出分解结果摘要，无需脚本
 ```
 
 ## 完成后提示

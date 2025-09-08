@@ -98,7 +98,7 @@ calc_feature_progress() {
 update_feature_progress() {
   local feature_name="$1"
   local feature_dir=".claude/features/$feature_name"
-  local feature_file="$feature_dir/feature.md"
+  local feature_file="$feature_dir/overview.md"
   
   if [ ! -f "$feature_file" ]; then
     echo "❌ 功能文件不存在: $feature_file"
@@ -205,7 +205,7 @@ generate_progress_report() {
       if [ -d "$feature_dir" ]; then
         local fname=$(basename "$feature_dir")
         local fprogress=$(calc_feature_progress "$fname")
-        local fstatus=$(grep "^status:" "$feature_dir/feature.md" | sed 's/^status: *//' 2>/dev/null)
+        local fstatus=$(grep "^status:" "$feature_dir/overview.md" | sed 's/^status: *//' 2>/dev/null)
         
         printf "  %-25s %s (%s%%)\n" "$fname" "$fstatus" "$fprogress"
         
@@ -264,7 +264,7 @@ export_progress_json() {
       
       local fname=$(basename "$feature_dir")
       local fprogress=$(calc_feature_progress "$fname")
-      local fstatus=$(grep "^status:" "$feature_dir/feature.md" | sed 's/^status: *//' 2>/dev/null)
+      local fstatus=$(grep "^status:" "$feature_dir/overview.md" | sed 's/^status: *//' 2>/dev/null)
       
       echo "    {" >> "$output_file"
       echo "      \"name\": \"$fname\"," >> "$output_file"
@@ -290,7 +290,7 @@ export_progress_csv() {
     if [ -d "$feature_dir" ]; then
       local fname=$(basename "$feature_dir")
       local fprogress=$(calc_feature_progress "$fname")
-      local fstatus=$(grep "^status:" "$feature_dir/feature.md" | sed 's/^status: *//' 2>/dev/null)
+      local fstatus=$(grep "^status:" "$feature_dir/overview.md" | sed 's/^status: *//' 2>/dev/null)
       
       echo "$fname,$fstatus,$fprogress" >> "$output_file"
     fi
