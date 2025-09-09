@@ -1,7 +1,6 @@
 ---
 feature_name: 用户认证系统
 document_type: 验收标准
-created_date: 2025-09-08
 ---
 
 # 功能验收标准: 用户认证系统

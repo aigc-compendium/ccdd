@@ -44,7 +44,6 @@ cat > "$ACCEPTANCE_FILE" << EOF
 ---
 feature_name: $FEATURE_NAME
 document_type: 验收标准
-created_date: $(date +"%Y-%m-%d")
 ---
 
 # 功能验收标准: $FEATURE_NAME

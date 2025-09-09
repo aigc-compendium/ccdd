@@ -50,14 +50,14 @@ read_task_status() {
   name=$(grep "^name:" "$TASK_FILE" 2>/dev/null | sed 's/^name: *//' || echo "")
   status=$(grep "^status:" "$TASK_FILE" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
   progress=$(grep "^progress:" "$TASK_FILE" 2>/dev/null | sed 's/^progress: *//' || echo "0")
-  estimated_hours=$(grep "^estimated_hours:" "$TASK_FILE" 2>/dev/null | sed 's/^estimated_hours: *//' || echo "8")
-  priority=$(grep "^priority:" "$TASK_FILE" 2>/dev/null | sed 's/^priority: *//' || echo "中等")
+  feature=$(grep "^feature:" "$TASK_FILE" 2>/dev/null | sed 's/^feature: *//' || echo "")
+  dependencies=$(grep "^dependencies:" "$TASK_FILE" 2>/dev/null | sed 's/^dependencies: *//' || echo "[]")
   
   echo "NAME: $name"
   echo "STATUS: $status"
   echo "PROGRESS: $progress"
-  echo "ESTIMATED_HOURS: $estimated_hours"
-  echo "PRIORITY: $priority"
+  echo "FEATURE: $feature"
+  echo "DEPENDENCIES: $dependencies"
   echo ""
   
   echo "=== TODO_ANALYSIS ==="

@@ -57,9 +57,6 @@ parse_json_array() {
 
 # 解析任务数据
 TASK_NAME=$(parse_json_field "$TASK_DATA" "name" "任务$TASK_ID")
-TASK_PRIORITY=$(parse_json_field "$TASK_DATA" "priority" "中")
-TASK_DIFFICULTY=$(parse_json_field "$TASK_DATA" "difficulty" "中等")
-TASK_HOURS=$(parse_json_field "$TASK_DATA" "estimated_hours" "8")
 TASK_GOAL=$(parse_json_field "$TASK_DATA" "goal" "")
 TASK_POINTS=$(parse_json_field "$TASK_DATA" "implementation_points" "")
 TASK_DETAILS=$(parse_json_field "$TASK_DATA" "technical_details" "")
@@ -69,9 +66,6 @@ TASK_ACCEPTANCE=$(parse_json_array "$TASK_DATA" "acceptance_criteria")
 
 echo "=== PARSED_TASK_DATA ==="
 echo "TASK_NAME: $TASK_NAME"
-echo "TASK_PRIORITY: $TASK_PRIORITY"
-echo "TASK_DIFFICULTY: $TASK_DIFFICULTY"
-echo "TASK_HOURS: $TASK_HOURS"
 echo ""
 
 # 生成任务文件内容
@@ -81,9 +75,6 @@ name: $TASK_NAME
 feature: $FEATURE_NAME
 status: 未开始
 progress: 0
-priority: $TASK_PRIORITY
-difficulty: $TASK_DIFFICULTY
-estimated_hours: $TASK_HOURS
 dependencies: [$TASK_DEPENDENCIES]
 ---
 

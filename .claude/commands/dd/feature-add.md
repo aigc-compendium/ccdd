@@ -129,21 +129,27 @@ EOF
 bash .claude/scripts/dd/generator/generate-acceptance.sh "<功能名>" "$acceptance_data"
 ```
 
-#### 4.4 完成功能创建
+#### 4.4 总结对话要点
 
-记录完整的功能设计对话历史:
+使用内置脚本分析当前会话：
+```bash
+bash .claude/scripts/dd/utils/get-session.sh
+```
+
+#### 4.5 完成功能创建
+
+根据脚本建议，总结关键对话要点：
 
 ```bash
 conversation_data=$(cat << 'EOF'
 {
   "feature_name": "功能名称",
-  "conversation": "完整的功能设计对话历史, 包括: \n\n用户: 我需要添加一个XX功能\n---\n助手: 我来帮您分析这个功能的需求...\n---\n用户: 这个功能主要用于...\n---\n\n[记录所有实际对话内容, 每轮用---分割, 不是总结]",
+  "conversation": "总结式对话记录：用户提出XX需求，AI分析并设计了YY方案",
   "design_decisions": "设计决策要点",
   "technical_choices": "技术选择理由"
 }
 EOF
 )
-
 ```
 
 **第五步**: 完成功能创建并提供后续建议
@@ -154,13 +160,7 @@ AI 直接执行以下操作:
 3. 记录功能创建对话历史到会话文件
 4. 提供后续操作建议（如功能分解、开始开发等）
 
-**重要**: 必须传递包含对话内容的 JSON 数据作为第二个参数:
-
-```json
-{
-  "conversation": "完整的用户与AI对话内容, 每轮对话用---分割, 包含需求分析、技术讨论、方案确认等过程"
-}
-```
+**优势**: 使用 `get-session.sh` 脚本自动获取对话历史，减少手动记录的思考成本和出错概率
 
 ## 使用方式
 

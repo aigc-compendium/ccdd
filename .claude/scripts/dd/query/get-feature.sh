@@ -109,15 +109,13 @@ show_feature_metadata() {
   # 读取功能文档的元数据
   local status=$(grep "^status:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
   local progress=$(grep "^progress:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^progress: *//' || echo "0")
-  local priority=$(grep "^priority:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^priority: *//' || echo "中等")
-  local estimated_hours=$(grep "^estimated_hours:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^estimated_hours: *//' || echo "40")
-  local complexity=$(grep "^complexity:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^complexity: *//' || echo "中等")
+  local type=$(grep "^type:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^type: *//' || echo "功能")
+  local scope=$(grep "^scope:" "$FEATURE_DIR/overview.md" 2>/dev/null | sed 's/^scope: *//' || echo "待确定")
   
   echo "STATUS: $status"
   echo "PROGRESS: $progress"
-  echo "PRIORITY: $priority"
-  echo "ESTIMATED_HOURS: $estimated_hours"
-  echo "COMPLEXITY: $complexity"
+  echo "TYPE: $type"
+  echo "SCOPE: $scope"
   echo ""
 }
 
@@ -151,29 +149,24 @@ show_tasks_analysis() {
         local task_name=$(grep "^name:" "$task_file" 2>/dev/null | sed 's/^name: *//' || echo "")
         local task_status=$(grep "^status:" "$task_file" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
         local task_progress=$(grep "^progress:" "$task_file" 2>/dev/null | sed 's/^progress: *//' || echo "0")
-        local task_hours=$(grep "^estimated_hours:" "$task_file" 2>/dev/null | sed 's/^estimated_hours: *//' || echo "8")
         
-        echo "$task_id: [$task_status] $task_progress% - $task_name ($task_hours h)"
+        echo "$task_id: [$task_status] $task_progress% - $task_name"
       done
       
       # 计算统计数据
       local completed_count=0
       local in_progress_count=0
       local pending_count=0
-      local total_hours=0
       
       for task_file in "$FEATURE_DIR/tasks"/*.md; do
         if [ -f "$task_file" ]; then
           local task_status=$(grep "^status:" "$task_file" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
-          local task_hours=$(grep "^estimated_hours:" "$task_file" 2>/dev/null | sed 's/^estimated_hours: *//' || echo "8")
           
           case "$task_status" in
             "已完成") completed_count=$((completed_count + 1)) ;;
             "进行中") in_progress_count=$((in_progress_count + 1)) ;;
             *) pending_count=$((pending_count + 1)) ;;
           esac
-          
-          total_hours=$((total_hours + task_hours))
         fi
       done
       
@@ -182,7 +175,7 @@ show_tasks_analysis() {
       echo "COMPLETED_TASKS: $completed_count"
       echo "IN_PROGRESS_TASKS: $in_progress_count"  
       echo "PENDING_TASKS: $pending_count"
-      echo "TOTAL_ESTIMATED_HOURS: $total_hours"
+      echo "TOTAL_TASKS: $((completed_count + in_progress_count + pending_count))"
       
       # 计算整体进度
       if [ "$task_files" -gt 0 ]; then
