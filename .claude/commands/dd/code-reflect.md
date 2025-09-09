@@ -8,7 +8,7 @@ allowed-tools: Task, Bash, Read, Grep, Glob
 
 ## 用法
 
-```
+```bash
 /dd:code-reflect
 [可选: 具体关注点描述]
 ```
