@@ -62,7 +62,6 @@ allowed-tools: Task, Write, Read
 
 - **功能信息** - 直接读取 `.claude/features/<feature_name>/overview.md` 等文件
 - **技术方案** - 直接读取 `.claude/features/<feature_name>/technical.md` 文件
-- **项目上下文** - 调用 `query/generate-task-context.sh <feature_name>`
 
 ### 2. 智能体深度分析
 
@@ -137,10 +136,7 @@ bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "<task_id>" 
 # 1. 收集功能信息
 # 直接读取功能文档文件：overview.md, technical.md, acceptance.md
 
-# 2. 收集项目上下文信息
-bash .claude/scripts/dd/query/generate-task-context.sh "<feature_name>"
-
-# 4. 生成任务文档（智能体分解后为每个任务调用）
+# 2. 生成任务文档（智能体分解后为每个任务调用）
 bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "001" '<task1_json>'
 bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "002" '<task2_json>'
 bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "003" '<task3_json>'

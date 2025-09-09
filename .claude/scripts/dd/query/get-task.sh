@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# DD 任务状态读取脚本
-# 读取任务文档的状态和进度信息
+# DD 任务信息读取脚本
+# 读取任务文档的完整信息，包括状态、进度和详细内容
+# 默认获取全部内容，提供 --status-only 参数仅查询状态
 
 set -e
 
@@ -9,6 +10,7 @@ TASK_ID=""
 FEATURE_NAME=""
 TASK_NUMBER=""
 TASK_FILE=""
+STATUS_ONLY=false
 
 parse_task_id() {
   if [ -z "$1" ]; then
@@ -85,31 +87,65 @@ read_task_status() {
   fi
   echo ""
   
-  echo "=== TASK_CONTENT ==="
-  echo "--- FULL_CONTENT ---"
-  cat "$TASK_FILE"
-  echo ""
+  # 仅在非status-only模式下显示完整内容
+  if [ "$STATUS_ONLY" = false ]; then
+    echo "=== TASK_CONTENT ==="
+    echo "--- FULL_CONTENT ---"
+    cat "$TASK_FILE"
+    echo ""
+  fi
   
-  echo "✅ Task status read completed: $TASK_ID"
+  if [ "$STATUS_ONLY" = true ]; then
+    echo "✅ Task status read completed: $TASK_ID"
+  else
+    echo "✅ Task information read completed: $TASK_ID"
+  fi
 }
 
 main() {
-  case "${1:-}" in
-    "--help"|"-h"|"help")
-      echo "DD 任务状态读取工具"
-      echo "用法: $0 <feature>:<task_id>"
-      echo "示例: $0 用户认证系统:001"
-      ;;
-    "")
-      echo "ERROR: Missing task parameter"
-      echo "用法: $0 <feature>:<task_id>"
-      exit 1
-      ;;
-    *)
-      parse_task_id "$1"
-      read_task_status
-      ;;
-  esac
+  local task_param=""
+  
+  # 解析参数
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --status-only)
+        STATUS_ONLY=true
+        shift
+        ;;
+      --help|-h|help)
+        echo "DD 任务信息读取工具"
+        echo "用法: $0 [选项] <feature>:<task_id>"
+        echo ""
+        echo "选项:"
+        echo "  --status-only    仅显示状态信息，不显示完整内容"
+        echo "  --help, -h       显示此帮助信息"
+        echo ""
+        echo "示例:"
+        echo "  $0 用户认证系统:001              # 显示完整信息"
+        echo "  $0 --status-only 用户认证系统:001 # 仅显示状态"
+        exit 0
+        ;;
+      *)
+        if [ -z "$task_param" ]; then
+          task_param="$1"
+        else
+          echo "ERROR: 意外的参数: $1"
+          exit 1
+        fi
+        shift
+        ;;
+    esac
+  done
+  
+  if [ -z "$task_param" ]; then
+    echo "ERROR: Missing task parameter"
+    echo "用法: $0 [选项] <feature>:<task_id>"
+    echo "使用 --help 查看完整帮助"
+    exit 1
+  fi
+  
+  parse_task_id "$task_param"
+  read_task_status
 }
 
 main "$@"

@@ -66,8 +66,13 @@ Options:
 命令通过 hooks 机制配合查询脚本获取状态信息，常用脚本: 
 
 ```bash
-# 获取功能状态
-bash .claude/scripts/dd/query/get-feature-status.sh "<feature_name>"
+# 获取功能状态 - 所有用法选项：
+bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
+bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
+bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance)
+bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
+bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
+bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
 
 # 获取 Git 信息
 bash .claude/scripts/dd/utils/git-info.sh <command>

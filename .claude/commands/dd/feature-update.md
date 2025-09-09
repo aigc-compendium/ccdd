@@ -10,10 +10,15 @@ allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash
 
 ### 1. 功能状态读取
 
-自动调用状态脚本获取功能和所有子任务信息：
+自动调用状态脚本获取功能和所有子任务信息，所有用法选项：
 
 ```bash
-bash .claude/scripts/dd/query/get-feature-status.sh "<feature_name>"
+bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
+bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
+bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance) - 推荐用于更新操作
+bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
+bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
+bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
 ```
 
 ### 2. 子任务批量更新
@@ -42,8 +47,13 @@ bash .claude/scripts/dd/query/get-feature-status.sh "<feature_name>"
 ### 1. 功能信息收集
 
 ```bash
-# 读取功能状态和所有子任务信息
-bash .claude/scripts/dd/query/get-feature-status.sh "<feature_name>"
+# 读取功能状态和所有子任务信息 - 所有用法选项：
+bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
+bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
+bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance) - 推荐用于更新分析
+bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
+bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
+bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
 ```
 
 ### 2. 子任务批量分析和更新

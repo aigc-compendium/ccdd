@@ -13,7 +13,7 @@ allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash
 自动调用状态脚本获取当前任务信息：
 
 ```bash
-bash .claude/scripts/dd/query/get-task-status.sh "<feature>:<task_id>"
+bash .claude/scripts/dd/query/get-task.sh "<feature>:<task_id>"
 ```
 
 ### 2. 智能状态更新
@@ -86,7 +86,7 @@ AI 会自动：
 
 ```bash
 # 读取当前任务状态
-bash .claude/scripts/dd/query/get-task-status.sh "<feature>:<task_id>"
+bash .claude/scripts/dd/query/get-task.sh "<feature>:<task_id>"
 ```
 
 ### 2. 变更分析
