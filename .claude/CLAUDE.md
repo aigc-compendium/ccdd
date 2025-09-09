@@ -68,7 +68,7 @@
 
 **智能对话类**: `/dd:chat`
 **帮助状态类**: `/dd:help` `/dd:status` `/dd:version`
-**项目初始化类**: `/dd:init` `/dd:init-exist` `/dd:prd`
+**项目初始化类**: `/dd:init` `/dd:prd`
 **架构管理类**: `/dd:framework-init` `/dd:framework-audit` `/dd:framework-adjust` `/dd:prd-decompose`
 **功能管理类**: `/dd:feature-add` `/dd:feature-decompose` `/dd:feature-start` `/dd:feature-update` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
 **任务管理类**: `/dd:task-start` `/dd:task-update` `/dd:task-audit`
@@ -77,7 +77,7 @@
 ### 典型工作流程
 
 ```bash
-/dd:init 或 /dd:init-exist    # 项目初始化
+/dd:init                      # 项目初始化 (支持 --analyze 参数)
 /dd:prd                      # 需求设计
 /dd:framework-init           # 架构设计
 /dd:feature-add 用户认证      # 添加功能

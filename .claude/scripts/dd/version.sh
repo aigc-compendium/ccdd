@@ -142,7 +142,7 @@ system_health_check() {
 show_usage_tips() {
   echo "💡 使用建议: "
   echo "  • 新项目: /dd:init → /dd:prd → /dd:framework-init"
-  echo "  • 已有项目: /dd:init-exist → /dd:framework-audit"
+  echo "  • 已有项目: /dd:init --analyze → /dd:framework-audit"
   echo "  • 智能咨询: /dd:chat"
   echo "  • 查看状态: /dd:status"
   echo "  • 获取帮助: /dd:help"

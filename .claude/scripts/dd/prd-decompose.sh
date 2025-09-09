@@ -17,7 +17,7 @@ show_help() {
   echo "  $0 --show                   # 显示现有拆解结果"
   echo ""
   echo "执行条件: "
-  echo "  • 项目已完成初始化 (dd:init 或 dd:init-exist)"
+  echo "  • 项目已完成初始化 (dd:init)"  # 支持 --analyze 参数
   echo "  • 已完成需求设计 (dd:prd)"  
   echo "  • 已完成架构设计 (dd:framework-init)"
   echo ""
@@ -34,7 +34,7 @@ check_prerequisites() {
   
   # 检查项目是否已初始化
   if [ ! -f ".claude/context/project.md" ]; then
-    echo "❌ 项目未初始化, 请先执行 /dd:init 或 /dd:init-exist"
+    echo "❌ 项目未初始化, 请先执行 /dd:init (支持 --analyze 参数)"
     missing=true
   fi
   

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 初始化后处理脚本
-# 由 dd:init 和 dd:init-exist 命令调用
+# 由 dd:init 命令调用 (支持默认模式和 --analyze 模式)
 # 根据 JSON 入参生成对应的文件并记录头脑风暴对话
 
 set -e
