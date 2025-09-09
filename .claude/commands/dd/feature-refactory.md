@@ -16,7 +16,7 @@ allowed-tools: Task, Read, Write, Edit, Bash
 
 - **中英文混合文本**：英文单词与中文字符之间必须有一个空格
 - **示例**：`这是一个 React 组件重构` 而不是 `这是一个React组件重构`
-- **适用范围**：所有重构分析、技术方案、测试策略等文档
+- **适用范围**：所有重构分析、技术方案等文档
 - **特殊情况**：标点符号前后不需要额外空格
 
 ### 1. 重构需求分析
@@ -46,7 +46,6 @@ allowed-tools: Task, Read, Write, Edit, Bash
 - 基于重构上下文重新生成三大文档:
   - overview.md - 重构后的功能描述
   - technical.md - 新的技术实现方案
-  - testing.md - 更新的测试策略
 - 保留历史版本进行对比
 
 ## 深度思考维度
@@ -95,6 +94,6 @@ allowed-tools: Task, Read, Write, Edit, Bash
 ## 输出规范
 
 - 重构分析报告
-- 更新的完整功能文档集合 (overview.md, technical.md, testing.md)
+- 更新的完整功能文档集合 (overview.md, technical.md)
 - 重构执行计划和风险评估
 - 下一步操作建议

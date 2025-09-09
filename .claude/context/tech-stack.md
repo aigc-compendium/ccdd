@@ -18,7 +18,6 @@ version: 1.0.0
 - **构建工具**: [Webpack/Vite/其他]
 - **包管理器**: [npm/yarn/pnpm]
 - **代码规范**: [ESLint/Prettier配置]
-- **测试框架**: [Jest/Vitest/其他]
 
 ### UI 组件库
 
@@ -44,7 +43,6 @@ version: 1.0.0
 ### 开发工具
 
 - **API 文档**: [Swagger/Postman/其他]
-- **测试框架**: [JUnit/pytest/其他]
 - **构建工具**: [Maven/Gradle/其他]
 - **代码质量**: [SonarQube/其他]
 

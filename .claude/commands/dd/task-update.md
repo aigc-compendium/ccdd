@@ -22,7 +22,6 @@ bash .claude/scripts/dd/query/get-task.sh "<feature>:<task_id>"
 
 - **代码变更** - 分析 Git diff 和文件变更
 - **TODO 完成度** - 统计任务文档中的 TODO 项目
-- **测试状态** - 检查相关测试文件和结果
 - **用户输入** - 接受用户手动指定的状态更新
 
 ### 3. 进度自动计算
@@ -94,7 +93,6 @@ bash .claude/scripts/dd/query/get-task.sh "<feature>:<task_id>"
 - 检查 Git 工作区状态
 - 分析相关文件的修改情况
 - 统计 TODO 项目完成度
-- 检查测试文件存在性
 
 ### 3. 智能状态推断
 
@@ -146,7 +144,6 @@ UPDATED_AT: 2024-01-15 14:30:00
 🔍 分析结果:
   • TODO 完成度: 3/5 (60%)
   • 代码变更: 4 个文件修改
-  • 测试文件: 存在
   • 验收条件: 部分满足
 
 📋 推荐更新:

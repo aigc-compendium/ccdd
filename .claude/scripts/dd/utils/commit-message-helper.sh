@@ -12,10 +12,9 @@ get_commit_type_desc() {
     "style") echo "代码格式（不影响功能的变更）" ;;
     "refactor") echo "代码重构（既不修复错误也不添加功能）" ;;
     "perf") echo "性能优化" ;;
-    "test") echo "添加测试" ;;
     "build") echo "构建系统或外部依赖变更" ;;
     "ci") echo "CI配置文件和脚本变更" ;;
-    "chore") echo "其他变更（不修改src或测试文件）" ;;
+    "chore") echo "其他变更" ;;
     "revert") echo "撤销之前的提交" ;;
     *) echo "未知类型" ;;
   esac
@@ -37,7 +36,6 @@ analyze_changes() {
   
   # 分析变更类型
   local has_new_files=false
-  local has_test_files=false
   local has_docs=false
   local has_config=false
   local has_src_files=false
@@ -49,9 +47,6 @@ analyze_changes() {
     fi
     
     case "$file" in
-      *test*|*spec*|*.test.*|*.spec.*)
-        has_test_files=true
-        ;;
       *.md|*.txt|docs/*|README*)
         has_docs=true
         ;;
@@ -67,17 +62,12 @@ analyze_changes() {
   echo ""
   echo "变更分析:"
   echo "  新增文件: $has_new_files"
-  echo "  测试文件: $has_test_files" 
   echo "  文档文件: $has_docs"
   echo "  配置文件: $has_config"
   echo "  源代码文件: $has_src_files"
   
   # 推荐commit类型
   local recommended_types=()
-  
-  if [ "$has_test_files" = true ]; then
-    recommended_types+=("test")
-  fi
   
   if [ "$has_docs" = true ]; then
     recommended_types+=("docs")
@@ -147,10 +137,6 @@ generate_commit_message_suggestions() {
     suggestions+=("docs: 完善文档内容，增加使用示例")
   fi
   
-  if echo "$all_files" | grep -q "test\|spec"; then
-    suggestions+=("test: 添加测试用例，提高代码覆盖率") 
-    suggestions+=("test: 修复测试问题，确保测试稳定性")
-  fi
   
   if echo "$all_files" | grep -q "config\|package\.json\|\..*rc\|\.claude"; then
     suggestions+=("build: 更新构建配置和依赖管理")
@@ -219,7 +205,7 @@ main() {
       echo "  help     - 显示帮助信息"
       echo ""
       echo "约定式提交类型:"
-      local types="feat fix docs style refactor perf test build ci chore revert"
+      local types="feat fix docs style refactor perf build ci chore revert"
       for type in $types; do
         echo "  $type: $(get_commit_type_desc "$type")"
       done
