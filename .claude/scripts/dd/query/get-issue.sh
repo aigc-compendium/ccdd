@@ -1,57 +1,57 @@
 #!/bin/bash
 
-# DD 任务信息读取脚本
-# 读取任务文档的完整信息，包括状态、进度和详细内容
+# DD 议题信息读取脚本
+# 读取议题文档的完整信息，包括状态、进度和详细内容
 # 默认获取全部内容，提供 --status-only 参数仅查询状态
 
 set -e
 
-TASK_ID=""
+ISSUE_ID=""
 FEATURE_NAME=""
-TASK_NUMBER=""
-TASK_FILE=""
+ISSUE_NUMBER=""
+ISSUE_FILE=""
 STATUS_ONLY=false
 
-parse_task_id() {
+parse_issue_id() {
   if [ -z "$1" ]; then
-    echo "ERROR: Missing task parameter"
+    echo "ERROR: Missing issue parameter"
     exit 1
   fi
   
-  # 解析功能名和任务编号
+  # 解析功能名和议题编号
   if [[ "$1" == *":"* ]]; then
     FEATURE_NAME="${1%:*}"
-    TASK_NUMBER="${1#*:}"
+    ISSUE_NUMBER="${1#*:}"
   else
-    echo "ERROR: Invalid task format. Expected: <feature>:<task_id>"
+    echo "ERROR: Invalid issue format. Expected: <feature>:<issue_id>"
     exit 1
   fi
   
-  TASK_ID="$1"
-  TASK_FILE=".claude/features/$FEATURE_NAME/tasks/$TASK_NUMBER.md"
+  ISSUE_ID="$1"
+  ISSUE_FILE=".claude/features/$FEATURE_NAME/issues/$ISSUE_NUMBER.md"
 }
 
-read_task_status() {
-  echo "=== TASK_STATUS_READ ==="
-  echo "TASK_ID: $TASK_ID"
+read_issue_status() {
+  echo "=== ISSUE_STATUS_READ ==="
+  echo "ISSUE_ID: $ISSUE_ID"
   echo "FEATURE_NAME: $FEATURE_NAME"
-  echo "TASK_NUMBER: $TASK_NUMBER"
-  echo "TASK_FILE: $TASK_FILE"
+  echo "ISSUE_NUMBER: $ISSUE_NUMBER"
+  echo "ISSUE_FILE: $ISSUE_FILE"
   echo ""
   
-  # 检查任务文件是否存在
-  if [ ! -f "$TASK_FILE" ]; then
-    echo "ERROR: Task file does not exist: $TASK_FILE"
+  # 检查议题文件是否存在
+  if [ ! -f "$ISSUE_FILE" ]; then
+    echo "ERROR: Issue file does not exist: $ISSUE_FILE"
     exit 1
   fi
   
-  echo "=== TASK_METADATA ==="
+  echo "=== ISSUE_METADATA ==="
   # 读取 YAML frontmatter 中的关键信息
-  name=$(grep "^name:" "$TASK_FILE" 2>/dev/null | sed 's/^name: *//' || echo "")
-  status=$(grep "^status:" "$TASK_FILE" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
-  progress=$(grep "^progress:" "$TASK_FILE" 2>/dev/null | sed 's/^progress: *//' || echo "0")
-  feature=$(grep "^feature:" "$TASK_FILE" 2>/dev/null | sed 's/^feature: *//' || echo "")
-  dependencies=$(grep "^dependencies:" "$TASK_FILE" 2>/dev/null | sed 's/^dependencies: *//' || echo "[]")
+  name=$(grep "^name:" "$ISSUE_FILE" 2>/dev/null | sed 's/^name: *//' || echo "")
+  status=$(grep "^status:" "$ISSUE_FILE" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
+  progress=$(grep "^progress:" "$ISSUE_FILE" 2>/dev/null | sed 's/^progress: *//' || echo "0")
+  feature=$(grep "^feature:" "$ISSUE_FILE" 2>/dev/null | sed 's/^feature: *//' || echo "")
+  dependencies=$(grep "^dependencies:" "$ISSUE_FILE" 2>/dev/null | sed 's/^dependencies: *//' || echo "[]")
   
   echo "NAME: $name"
   echo "STATUS: $status"
@@ -62,8 +62,8 @@ read_task_status() {
   
   echo "=== TODO_ANALYSIS ==="
   # 分析 TODO 项目完成情况
-  total_todos=$(grep -c "^- \[" "$TASK_FILE" 2>/dev/null || echo "0")
-  completed_todos=$(grep -c "^- \[x\]" "$TASK_FILE" 2>/dev/null || echo "0")
+  total_todos=$(grep -c "^- \[" "$ISSUE_FILE" 2>/dev/null || echo "0")
+  completed_todos=$(grep -c "^- \[x\]" "$ISSUE_FILE" 2>/dev/null || echo "0")
   
   echo "TOTAL_TODOS: $total_todos"
   echo "COMPLETED_TODOS: $completed_todos"
@@ -78,7 +78,7 @@ read_task_status() {
   
   echo "=== SESSION_CONTEXT ==="
   # 检查会话上下文文件
-  session_file=".claude/context/session/$TASK_NUMBER.md"
+  session_file=".claude/context/session/$ISSUE_NUMBER.md"
   if [ -f "$session_file" ]; then
     echo "SESSION_FILE: EXISTS"
     echo "LAST_MODIFIED: $(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$session_file")"
@@ -89,21 +89,21 @@ read_task_status() {
   
   # 仅在非status-only模式下显示完整内容
   if [ "$STATUS_ONLY" = false ]; then
-    echo "=== TASK_CONTENT ==="
+    echo "=== ISSUE_CONTENT ==="
     echo "--- FULL_CONTENT ---"
-    cat "$TASK_FILE"
+    cat "$ISSUE_FILE"
     echo ""
   fi
   
   if [ "$STATUS_ONLY" = true ]; then
-    echo "✅ Task status read completed: $TASK_ID"
+    echo "✅ Issue status read completed: $ISSUE_ID"
   else
-    echo "✅ Task information read completed: $TASK_ID"
+    echo "✅ Issue information read completed: $ISSUE_ID"
   fi
 }
 
 main() {
-  local task_param=""
+  local issue_param=""
   
   # 解析参数
   while [[ $# -gt 0 ]]; do
@@ -113,8 +113,8 @@ main() {
         shift
         ;;
       --help|-h|help)
-        echo "DD 任务信息读取工具"
-        echo "用法: $0 [选项] <feature>:<task_id>"
+        echo "DD 议题信息读取工具"
+        echo "用法: $0 [选项] <feature>:<issue_id>"
         echo ""
         echo "选项:"
         echo "  --status-only    仅显示状态信息，不显示完整内容"
@@ -126,8 +126,8 @@ main() {
         exit 0
         ;;
       *)
-        if [ -z "$task_param" ]; then
-          task_param="$1"
+        if [ -z "$issue_param" ]; then
+          issue_param="$1"
         else
           echo "ERROR: 意外的参数: $1"
           exit 1
@@ -137,15 +137,15 @@ main() {
     esac
   done
   
-  if [ -z "$task_param" ]; then
-    echo "ERROR: Missing task parameter"
-    echo "用法: $0 [选项] <feature>:<task_id>"
+  if [ -z "$issue_param" ]; then
+    echo "ERROR: Missing issue parameter"
+    echo "用法: $0 [选项] <feature>:<issue_id>"
     echo "使用 --help 查看完整帮助"
     exit 1
   fi
   
-  parse_task_id "$task_param"
-  read_task_status
+  parse_issue_id "$issue_param"
+  read_issue_status
 }
 
 main "$@"

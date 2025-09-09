@@ -80,7 +80,7 @@ Task:
 
     1. **变更合理性分析**: 
        - 变更是否有明确的目的和价值？
-       - 是否符合当前的开发任务或目标？
+       - 是否符合当前的开发议题或目标？
        - 变更范围是否适当, 没有过度修改？
        - 是否有不必要的或无关的修改？
 
@@ -156,18 +156,18 @@ Task:
     - 考虑项目的具体上下文和技术栈
 ```
 
-### 4. 当前任务关联分析
+### 4. 当前议题关联分析
 
-如果存在当前执行的任务, 关联分析变更与任务的一致性:
+如果存在当前执行的议题, 关联分析变更与议题的一致性:
 
 ```bash
-# 查找当前活跃的任务
-current_tasks=$(find .claude/features -name "*.md" -path "*/tasks/*" -exec grep -l "^status: 进行中" {} \; 2>/dev/null)
+# 查找当前活跃的议题
+current_issues=$(find .claude/features -name "*.md" -path "*/issues/*" -exec grep -l "^status: 进行中" {} \; 2>/dev/null)
 
-if [ -n "$current_tasks" ]; then
+if [ -n "$current_issues" ]; then
   echo ""
-  echo "🎯 任务关联分析: "
-  echo "发现进行中的任务, 将分析变更与任务目标的一致性"
+  echo "🎯 议题关联分析: "
+  echo "发现进行中的议题, 将分析变更与议题目标的一致性"
 fi
 ```
 

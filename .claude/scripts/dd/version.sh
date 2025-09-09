@@ -70,18 +70,18 @@ check_project_status() {
     local features_count=$(ls -1d .claude/features/*/ 2>/dev/null | wc -l)
     echo "  功能数量: $features_count 个"
     
-    # 统计活跃任务
-    local active_tasks=0
+    # 统计活跃议题
+    local active_issues=0
     for feature_dir in .claude/features/*/; do
-      if [ -d "$feature_dir/tasks" ]; then
-        local task_count=$(find "$feature_dir/tasks" -name "*.md" -exec grep -l "status: 进行中" {} \; 2>/dev/null | wc -l)
-        active_tasks=$((active_tasks + task_count))
+      if [ -d "$feature_dir/issues" ]; then
+        local issue_count=$(find "$feature_dir/issues" -name "*.md" -exec grep -l "status: 进行中" {} \; 2>/dev/null | wc -l)
+        active_issues=$((active_issues + issue_count))
       fi
     done
-    echo "  活跃任务: $active_tasks 个"
+    echo "  活跃议题: $active_issues 个"
   else
     echo "  功能数量: 0 个"
-    echo "  活跃任务: 0 个"
+    echo "  活跃议题: 0 个"
   fi
   
   echo ""

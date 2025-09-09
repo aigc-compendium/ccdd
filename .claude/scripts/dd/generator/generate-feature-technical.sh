@@ -11,13 +11,13 @@ technical_data="$2"
 
 if [ -z "$FEATURE_NAME" ]; then
     echo "ERROR: Missing feature name parameter"
-    echo "用法: bash generate-technical.sh '<feature_name>' '<json_data>'"
+    echo "用法: bash generate-feature-technical.sh '<feature_name>' '<json_data>'"
     exit 1
 fi
 
 if [ -z "$technical_data" ] || [ "$technical_data" = "null" ]; then
     echo "ERROR: Missing JSON data parameter"
-    echo "用法: bash generate-technical.sh '<feature_name>' '<json_data>'"
+    echo "用法: bash generate-feature-technical.sh '<feature_name>' '<json_data>'"
     exit 1
 fi
 

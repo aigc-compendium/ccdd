@@ -1,8 +1,8 @@
 ---
 name: 用户认证系统
 status: 未开始
-tasks_total: 5
-tasks_completed: 0
+issues_total: 5
+issues_completed: 0
 ---
 
 # 用户认证系统

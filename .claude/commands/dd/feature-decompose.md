@@ -4,15 +4,15 @@ allowed-tools: Task, Write, Read
 
 # DD 功能分解
 
-深度分析功能技术实现路径, 按合理性进行任务规划和分解.
+深度分析功能技术实现路径, 按合理性进行议题规划和分解.
 
 ## 功能概述
 
-智能分解功能为具体任务:
+智能分解功能为具体议题:
 
 - 基于技术实现路径分析
-- 按依赖关系排序任务
-- 生成详细任务文档
+- 按依赖关系排序议题
+- 生成详细议题文档
 - 专注功能实现逻辑
 
 ## 分解原则
@@ -21,7 +21,7 @@ allowed-tools: Task, Write, Read
 
 #### 文档格式要求
 
-所有生成的任务文档内容必须遵循以下格式规范：
+所有生成的议题文档内容必须遵循以下格式规范：
 
 - **中英文混合文本**：英文单词与中文字符之间必须有一个空格
 - **示例**：`这是一个 API 接口设计` 而不是 `这是一个API接口设计`
@@ -34,25 +34,25 @@ allowed-tools: Task, Write, Read
   }
   ```
 - **错误示例**：`"todos": "分析需求|创建脚本|实现功能"`
-- **适用范围**：所有任务描述、实现要点、验收标准、todo列表等
+- **适用范围**：所有议题描述、实现要点、验收标准、todo列表等
 
-### 1. 任务独立性
+### 1. 议题独立性
 
-- 每个任务可以独立开发和验证
+- 每个议题可以独立开发和验证
 - 明确的输入和输出定义
 - 清晰的验收标准
 
-### 2. 合理的任务粒度
+### 2. 合理的议题粒度
 
-- 单个任务功能完整独立
+- 单个议题功能完整独立
 - 避免过度拆分或合并  
 - 便于进度跟踪和管理
 
 ### 3. 依赖关系清晰
 
-- 识别任务间的前后依赖
+- 识别议题间的前后依赖
 - 避免循环依赖
-- 支持并行开发的任务
+- 支持并行开发的议题
 
 ## 执行流程
 
@@ -68,63 +68,84 @@ allowed-tools: Task, Write, Read
 基于收集的信息进行深度分析:
 
 - **技术路径分析** - 分析最佳实现路径和关键技术点
-- **依赖关系梳理** - 识别任务间和功能间的依赖关系
-- **任务规划策略** - 制定合理的任务分解和执行计划
-- **实现逻辑优化** - 确保任务分解的逻辑合理性
+- **依赖关系梳理** - 识别议题间和功能间的依赖关系
+- **议题规划策略** - 制定合理的议题分解和执行计划
+- **实现逻辑优化** - 确保议题分解的逻辑合理性
 
-### 3. 智能任务分解
+### 3. 智能议题分解
 
-生成优化的任务列表:
+生成优化的议题列表:
 
-- 基于技术复杂度建议任务数量（简单:3-5 个, 中等:5-8 个, 复杂:8-12 个）
-- 按实现顺序合理性排列任务
-- 确定任务间的依赖关系
-- 估算各任务工作量
+- 基于技术复杂度建议议题数量（简单:3-5 个, 中等:5-8 个, 复杂:8-12 个）
+- 按实现顺序合理性排列议题
+- 确定议题间的依赖关系
+- 估算各议题工作量
 
-### 4. 智能任务文档生成
+### 4. 智能议题文档生成
 
-基于深度分析结果, 为每个分解的任务调用生成脚本:
+基于深度分析结果, 为每个分解的议题调用生成脚本:
 
 ```bash
-bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "<task_id>" '<task_data_json>'
+bash .claude/scripts/dd/generator/generate-issue.sh "<feature_name>" "<issue_id>" '<issue_data_json>'
 ```
 
 **参数说明**:
 
 - `<feature_name>`: 功能名称
-- `<task_id>`: 任务 ID（如: 001, 002, 003）
-- `<task_data_json>`: 任务数据的 JSON 格式
+- `<issue_id>`: 议题 ID（如: 001, 002, 003）
+- `<issue_data_json>`: 议题数据的 JSON 格式
 
 **JSON 数据结构**:
 
 ```json
 {
-  "name": "任务名称",
-  "goal": "任务目标描述",
+  "name": "议题名称",
+  "goal": "议题目标描述",
   "implementation_points": "关键实现要点（markdown列表格式）",
   "acceptance_criteria": "验收条件（markdown列表格式）"
 }
 ```
 
-### 5. 完成处理
+### 5. 更新功能文档议题清单
 
-智能体直接输出分解结果摘要和下一步建议
+分解完成后，自动更新 `.claude/features/<feature_name>/overview.md` 中的 `## issues` 部分:
+
+```bash
+# 扫描生成的议题文件，获取议题列表
+echo "=== 更新功能议题清单 ==="
+for issue_file in .claude/features/<feature_name>/issues/*.md; do
+    issue_id=$(basename "$issue_file" .md)  
+    issue_name=$(grep "^name:" "$issue_file" | cut -d: -f2- | xargs)
+    echo "议题 $issue_id: $issue_name"
+done
+
+# AI 基于扫描结果，智能更新 overview.md 的 ## issues 部分
+# 确保格式为:
+# ## issues
+# - 001
+# - 002  
+# - 003
+```
+
+### 6. 完成处理
+
+智能体输出分解结果摘要和下一步建议
 
 ## 输出结果
 
-在功能目录下创建 `tasks/` 文件夹:
+在功能目录下创建 `issues/` 文件夹:
 
 ```
-.claude/features/{功能名}/tasks/
-├── 001.md  # 第一个任务
-├── 002.md  # 第二个任务
+.claude/features/{功能名}/issues/
+├── 001.md  # 第一个议题
+├── 002.md  # 第二个议题
 └── ...
 ```
 
-每个任务文件包含:
+每个议题文件包含:
 
-- YAML 元数据（任务名、功能名、状态）
-- 任务描述和目标
+- YAML 元数据（议题名、功能名、状态）
+- 议题描述和目标
 - 实现要点
 - 验收标准
 
@@ -136,11 +157,11 @@ bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "<task_id>" 
 # 1. 收集功能信息
 # 直接读取功能文档文件：overview.md, technical.md, acceptance.md
 
-# 2. 生成任务文档（智能体分解后为每个任务调用）
-bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "001" '<task1_json>'
-bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "002" '<task2_json>'
-bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "003" '<task3_json>'
-# ... 为每个任务调用一次
+# 2. 生成议题文档（智能体分解后为每个议题调用）
+bash .claude/scripts/dd/generator/generate-issue.sh "<feature_name>" "001" '<issue1_json>'
+bash .claude/scripts/dd/generator/generate-issue.sh "<feature_name>" "002" '<issue2_json>'
+bash .claude/scripts/dd/generator/generate-issue.sh "<feature_name>" "003" '<issue3_json>'
+# ... 为每个议题调用一次
 
 # 3. 完成验证和总结
 # 智能体直接输出分解结果摘要，无需脚本
@@ -149,21 +170,21 @@ bash .claude/scripts/dd/generator/generate-task.sh "<feature_name>" "003" '<task
 ## 完成后提示
 
 ```bash
-🎯 功能任务分解完成！
+🎯 功能议题分解完成！
 📋 功能: {功能名}
-📊 已生成 {X} 个任务
+📊 已生成 {X} 个议题
 ⏱️ 预估总工时: {Y} 小时
 
 📝 建议下一步操作:
    /dd:feature-start {功能名}  - 开始功能开发
 
-💡 或查看任务详情:
-   查看 .claude/features/{功能名}/tasks/ 目录
+💡 或查看议题详情:
+   查看 .claude/features/{功能名}/issues/ 目录
 ```
 
 ## 质量标准
 
-- **独立性** - 任务可独立完成和验证
+- **独立性** - 议题可独立完成和验证
 - **完整性** - 覆盖功能所有技术要求
-- **合理性** - 任务大小和复杂度适中
+- **合理性** - 议题大小和复杂度适中
 - **可验证性** - 明确的验收和完成标准

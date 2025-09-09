@@ -38,9 +38,9 @@ calculate_basic_progress() {
   local completed_features=0
   local active_features=0
   local pending_features=0
-  local total_tasks=0
-  local completed_tasks=0
-  local active_tasks=0
+  local total_issues=0
+  local completed_issues=0
+  local active_issues=0
   
   if [ -d ".claude/features" ]; then
     for feature_dir in .claude/features/*/; do
@@ -59,15 +59,15 @@ calculate_basic_progress() {
           *) pending_features=$((pending_features + 1)) ;;
         esac
         
-        # 统计任务
-        if [ -d "$feature_dir/tasks" ]; then
-          for task_file in "$feature_dir/tasks"/*.md; do
-            if [ -f "$task_file" ]; then
-              total_tasks=$((total_tasks + 1))
-              local task_status=$(grep "^status:" "$task_file" 2>/dev/null | cut -d: -f2- | xargs)
-              case "$task_status" in
-                "已完成") completed_tasks=$((completed_tasks + 1)) ;;
-                "进行中") active_tasks=$((active_tasks + 1)) ;;
+        # 统计议题
+        if [ -d "$feature_dir/issues" ]; then
+          for issue_file in "$feature_dir/issues"/*.md; do
+            if [ -f "$issue_file" ]; then
+              total_issues=$((total_issues + 1))
+              local issue_status=$(grep "^status:" "$issue_file" 2>/dev/null | cut -d: -f2- | xargs)
+              case "$issue_status" in
+                "已完成") completed_issues=$((completed_issues + 1)) ;;
+                "进行中") active_issues=$((active_issues + 1)) ;;
               esac
             fi
           done
@@ -83,10 +83,10 @@ calculate_basic_progress() {
     FEATURE_PROGRESS=0
   fi
   
-  if [ $total_tasks -gt 0 ]; then
-    TASK_PROGRESS=$((completed_tasks * 100 / total_tasks))
+  if [ $total_issues -gt 0 ]; then
+    ISSUE_PROGRESS=$((completed_issues * 100 / total_issues))
   else
-    TASK_PROGRESS=0
+    ISSUE_PROGRESS=0
   fi
   
   # 导出变量供显示使用
@@ -94,9 +94,9 @@ calculate_basic_progress() {
   COMPLETED_FEATURES=$completed_features
   ACTIVE_FEATURES=$active_features
   PENDING_FEATURES=$pending_features
-  TOTAL_TASKS=$total_tasks
-  COMPLETED_TASKS=$completed_tasks
-  ACTIVE_TASKS=$active_tasks
+  TOTAL_ISSUES=$total_issues
+  COMPLETED_ISSUES=$completed_issues
+  ACTIVE_ISSUES=$active_issues
 }
 
 get_git_status() {
@@ -151,9 +151,9 @@ show_status_report() {
   echo "  开发中: $ACTIVE_FEATURES 个"
   echo "  未开始: $PENDING_FEATURES 个"
   echo ""
-  echo "  总任务数: $TOTAL_TASKS 个"
-  echo "  已完成: $COMPLETED_TASKS 个 ($TASK_PROGRESS%)"
-  echo "  进行中: $ACTIVE_TASKS 个"
+  echo "  总议题数: $TOTAL_ISSUES 个"
+  echo "  已完成: $COMPLETED_ISSUES 个 ($ISSUE_PROGRESS%)"
+  echo "  进行中: $ACTIVE_ISSUES 个"
   echo ""
   
   echo "🔄 活跃开发: "

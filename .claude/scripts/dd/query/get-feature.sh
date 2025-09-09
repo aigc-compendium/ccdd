@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # DD 功能信息读取脚本
-# 读取功能文档的信息，包括状态、进度和子任务信息
+# 读取功能文档的信息，包括状态、进度和子议题信息
 # 默认读取 overview.md，支持多种读取选项
 
 set -e
@@ -134,23 +134,23 @@ show_feature_files_status() {
   echo ""
 }
 
-# 分析并显示任务状态
-show_tasks_analysis() {
-  echo "=== TASKS_ANALYSIS ==="
-  # 分析任务状态
-  if [ -d "$FEATURE_DIR/tasks" ]; then
-    local task_files=$(find "$FEATURE_DIR/tasks" -name "*.md" 2>/dev/null | wc -l | xargs)
-    echo "TOTAL_TASKS: $task_files"
+# 分析并显示议题状态
+show_issues_analysis() {
+  echo "=== ISSUES_ANALYSIS ==="
+  # 分析议题状态
+  if [ -d "$FEATURE_DIR/issues" ]; then
+    local issue_files=$(find "$FEATURE_DIR/issues" -name "*.md" 2>/dev/null | wc -l | xargs)
+    echo "TOTAL_ISSUES: $issue_files"
     
-    if [ "$task_files" -gt 0 ]; then
-      echo "--- TASK_DETAILS ---"
-      find "$FEATURE_DIR/tasks" -name "*.md" | sort | while read task_file; do
-        local task_id=$(basename "$task_file" .md)
-        local task_name=$(grep "^name:" "$task_file" 2>/dev/null | sed 's/^name: *//' || echo "")
-        local task_status=$(grep "^status:" "$task_file" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
-        local task_progress=$(grep "^progress:" "$task_file" 2>/dev/null | sed 's/^progress: *//' || echo "0")
+    if [ "$issue_files" -gt 0 ]; then
+      echo "--- ISSUE_DETAILS ---"
+      find "$FEATURE_DIR/issues" -name "*.md" | sort | while read issue_file; do
+        local issue_id=$(basename "$issue_file" .md)
+        local issue_name=$(grep "^name:" "$issue_file" 2>/dev/null | sed 's/^name: *//' || echo "")
+        local issue_status=$(grep "^status:" "$issue_file" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
+        local issue_progress=$(grep "^progress:" "$issue_file" 2>/dev/null | sed 's/^progress: *//' || echo "0")
         
-        echo "$task_id: [$task_status] $task_progress% - $task_name"
+        echo "$issue_id: [$issue_status] $issue_progress% - $issue_name"
       done
       
       # 计算统计数据
@@ -158,11 +158,11 @@ show_tasks_analysis() {
       local in_progress_count=0
       local pending_count=0
       
-      for task_file in "$FEATURE_DIR/tasks"/*.md; do
-        if [ -f "$task_file" ]; then
-          local task_status=$(grep "^status:" "$task_file" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
+      for issue_file in "$FEATURE_DIR/issues"/*.md; do
+        if [ -f "$issue_file" ]; then
+          local issue_status=$(grep "^status:" "$issue_file" 2>/dev/null | sed 's/^status: *//' || echo "未开始")
           
-          case "$task_status" in
+          case "$issue_status" in
             "已完成") completed_count=$((completed_count + 1)) ;;
             "进行中") in_progress_count=$((in_progress_count + 1)) ;;
             *) pending_count=$((pending_count + 1)) ;;
@@ -171,21 +171,21 @@ show_tasks_analysis() {
       done
       
       echo ""
-      echo "--- TASK_SUMMARY ---"
-      echo "COMPLETED_TASKS: $completed_count"
-      echo "IN_PROGRESS_TASKS: $in_progress_count"  
-      echo "PENDING_TASKS: $pending_count"
-      echo "TOTAL_TASKS: $((completed_count + in_progress_count + pending_count))"
+      echo "--- ISSUE_SUMMARY ---"
+      echo "COMPLETED_ISSUES: $completed_count"
+      echo "IN_PROGRESS_ISSUES: $in_progress_count"  
+      echo "PENDING_ISSUES: $pending_count"
+      echo "TOTAL_ISSUES: $((completed_count + in_progress_count + pending_count))"
       
       # 计算整体进度
-      if [ "$task_files" -gt 0 ]; then
-        local overall_progress=$(echo "scale=0; $completed_count * 100 / $task_files" | bc)
+      if [ "$issue_files" -gt 0 ]; then
+        local overall_progress=$(echo "scale=0; $completed_count * 100 / $issue_files" | bc)
         echo "CALCULATED_PROGRESS: ${overall_progress}%"
       fi
     fi
   else
-    echo "TOTAL_TASKS: 0"
-    echo "TASKS_DIR: NOT_EXISTS"
+    echo "TOTAL_ISSUES: 0"
+    echo "ISSUES_DIR: NOT_EXISTS"
   fi
   echo ""
 }
@@ -244,7 +244,7 @@ read_feature_status() {
   show_feature_header
   show_feature_metadata
   show_feature_files_status
-  show_tasks_analysis
+  show_issues_analysis
   show_feature_content
   show_completion_message
 }

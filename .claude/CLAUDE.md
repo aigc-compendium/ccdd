@@ -26,7 +26,7 @@
 系统会智能匹配并自动注入以下上下文:
 
 - **项目上下文**: `.claude/context/*` - 项目状态、架构、进度等
-- **功能上下文**: 当前操作相关的功能和任务信息
+- **功能上下文**: 当前操作相关的功能和议题信息
 - **会话上下文**: 历史对话和决策记录
 
 **注意**: 这些上下文会根据当前操作自动加载, 无需手动指定.
@@ -38,7 +38,7 @@
 - **chat-assistant**: 基于持久上下文的对话
 - **code-analyzer**: 深度代码分析、逻辑跟踪、漏洞检测
 - **feature-designer**: 功能需求分析和设计方案制定
-- **task-executor**: 任务执行和进度跟踪管理
+- **issue-executor**: 议题执行和进度跟踪管理
 - **framework-architect**: 系统架构设计和技术选型
 - **deep-thinker**: 深度思考和决策分析
 - **claude-md-merger**: 智能合并 CLAUDE.md 配置文件
@@ -48,7 +48,7 @@
 - **项目上下文**: `/dd:chat` 自动调用 chat-assistant
 - **代码分析**: 使用 Task 工具调用 code-analyzer
 - **功能设计**: 使用 Task 工具调用 feature-designer
-- **任务执行**: 使用 Task 工具调用 task-executor
+- **议题执行**: 使用 Task 工具调用 issue-executor
 - **架构设计**: 使用 Task 工具调用 framework-architect
 - **深度思考**: 使用 Task 工具调用 deep-thinker
 - **配置合并**: init 完成后使用 Task 工具调用 claude-md-merger
@@ -56,7 +56,7 @@
 ## 工作行为规范
 
 - 保持简洁直接, 避免冗长解释
-- 按要求执行任务, 不多不少
+- 按要求执行议题, 不多不少
 - 优先编辑现有文件而不是创建新文件
 - 永远不要主动创建文档文件
 - 欢迎批评, 保持怀疑态度
@@ -71,7 +71,7 @@
 **项目初始化类**: `/dd:init` `/dd:prd`
 **架构管理类**: `/dd:framework-init` `/dd:framework-audit` `/dd:framework-adjust` `/dd:prd-decompose`
 **功能管理类**: `/dd:feature-add` `/dd:feature-decompose` `/dd:feature-start` `/dd:feature-update` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
-**任务管理类**: `/dd:task-start` `/dd:task-update` `/dd:task-audit`
+**议题管理类**: `/dd:issue-start` `/dd:issue-update`
 **代码质量类**: `/dd:code-reflect`
 
 ### 典型工作流程
@@ -96,7 +96,7 @@
 ├── rules/           # 安全和操作规则
 ├── context/         # 项目上下文和状态
 ├── chats/           # 对话历史记录
-├── features/        # 功能定义和任务
+├── features/        # 功能定义和议题
 └── scripts/         # 实用工具脚本
 ```
 

@@ -94,15 +94,15 @@ echo ""
 ## 4. 查找关联的任务
 
 echo "🎯 任务关联分析: "
-current_tasks=$(find .claude/features -name "*.md" -path "*/tasks/*" -exec grep -l "^status: 进行中" {} \; 2>/dev/null)
+current_issues=$(find .claude/features -name "*.md" -path "*/issues/*" -exec grep -l "^status: 进行中" {} \; 2>/dev/null)
 
-if [ -n "$current_tasks" ]; then
+if [ -n "$current_issues" ]; then
   echo "  发现进行中的任务: "
-  echo "$current_tasks" | while read -r task_file; do
-    task_name=$(grep "^name:" "$task_file" | sed 's/^name: *//')
-    feature_name=$(echo "$task_file" | sed 's|.*/features/\([^/]*\)/.*|\1|')
-    task_num=$(basename "$task_file" .md)
-    echo "    📋 $feature_name:$task_num - $task_name"
+  echo "$current_issues" | while read -r issue_file; do
+    issue_name=$(grep "^name:" "$issue_file" | sed 's/^name: *//')
+    feature_name=$(echo "$issue_file" | sed 's|.*/features/\([^/]*\)/.*|\1|')
+    issue_num=$(basename "$issue_file" .md)
+    echo "    📋 $feature_name:$issue_num - $issue_name"
   done
 else
   echo "  ℹ️  未发现进行中的任务"

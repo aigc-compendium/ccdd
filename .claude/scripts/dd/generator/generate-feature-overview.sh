@@ -39,8 +39,6 @@ core_features=$(echo "$feature_data" | jq -r '.core_features // "核心功能待
 feature_boundary_include=$(echo "$feature_data" | jq -r '.feature_boundary_include // "功能边界待定义"')
 feature_boundary_exclude=$(echo "$feature_data" | jq -r '.feature_boundary_exclude // "排除边界待明确"')
 use_scenarios=$(echo "$feature_data" | jq -r '.use_scenarios // "使用场景待描述"')
-acceptance_criteria=$(echo "$feature_data" | jq -r '.acceptance_criteria // "验收标准待制定"')
-complexity=$(echo "$feature_data" | jq -r '.complexity // "中等"')
 dependencies=$(echo "$feature_data" | jq -r '.dependencies // "无特殊依赖"')
 
 # 生成精简的功能描述文档
@@ -48,9 +46,14 @@ cat > "$FEATURE_FILE" << EOF
 ---
 name: $FEATURE_NAME
 status: 设计中
+progress: 0%
+issues_total: 0
+issues_completed: 0
 ---
 
 # 功能: $FEATURE_NAME
+
+## issues
 
 ## 功能目标
 $goal

@@ -111,7 +111,7 @@
 - **项目上下文**: `/dd:chat` 时自动调用 chat-assistant
 - **代码分析**: 使用 Task 工具调用 code-analyzer
 - **功能设计**: 使用 Task 工具调用 feature-designer
-- **任务执行**: 使用 Task 工具调用 task-executor
+- **议题执行**: 使用 Task 工具调用 issue-executor
 - **架构设计**: 使用 Task 工具调用 framework-architect
 - **深度思考**: 使用 Task 工具调用 deep-thinker
 - **配置合并**: init 完成后使用 Task 工具调用 claude-md-merger
@@ -127,7 +127,7 @@
 ### 保持简洁直接
 
 - **避免冗长解释**: 除非用户明确要求详细说明
-- **一次一个任务**: 按要求执行任务, 不多不少
+- **一次一个议题**: 按要求执行议题, 不多不少
 - **结果导向**: 专注于解决问题, 而非过程描述
 
 ### 专业态度

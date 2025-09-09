@@ -4,89 +4,7 @@ allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash
 
 # DD 功能状态更新
 
-智能更新功能整体状态和进度，自动遍历并更新所有子任务状态，提供功能级别的进度管理。
-
-## 核心功能
-
-### 1. 功能状态读取
-
-自动调用状态脚本获取功能和所有子任务信息，所有用法选项：
-
-```bash
-bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
-bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
-bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance) - 推荐用于更新操作
-bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
-bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
-bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
-```
-
-### 2. 子任务批量更新
-
-在更新功能状态前，自动遍历并更新所有子任务：
-- 逐个分析每个任务的实际状态
-- 智能推断任务进度和状态变更
-- 更新所有任务文档的元数据
-
-### 3. 功能整体状态计算
-
-基于所有子任务状态计算功能整体状态：
-- **未开始** - 所有任务都未开始
-- **进行中** - 部分任务已开始或完成
-- **已完成** - 所有任务都已完成
-
-### 4. 进度自动聚合
-
-智能计算功能整体进度：
-- 基于子任务完成度加权平均
-- 考虑任务优先级和复杂度
-- 更新功能文档的 progress 字段
-
-## 更新执行流程
-
-### 1. 功能信息收集
-
-```bash
-# 读取功能状态和所有子任务信息 - 所有用法选项：
-bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
-bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
-bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance) - 推荐用于更新分析
-bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
-bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
-bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
-```
-
-### 2. 子任务批量分析和更新
-
-对每个子任务执行：
-1. 读取任务当前状态
-2. 分析代码变更和 TODO 完成度
-3. 智能推断任务新状态
-4. 更新任务文档
-5. 记录更新日志
-
-### 3. 功能状态聚合
-
-基于更新后的子任务状态：
-- 计算功能整体进度百分比
-- 确定功能整体状态
-- 识别阻塞问题和风险
-
-### 4. 功能文档更新
-
-更新功能主文档 `overview.md` 的关键信息：
-- `status` - 功能整体状态
-- `progress` - 整体完成进度
-- `tasks_total` - 总任务数量
-- `tasks_completed` - 已完成任务数
-- `updated_at` - 最后更新时间
-
-### 5. 进度报告生成
-
-生成详细的功能进度报告：
-- 子任务状态分布统计
-- 完成时间预估
-- 风险识别和建议
+智能更新功能整体状态和进度，自动遍历并更新所有子议题状态，提供功能级别的进度管理。
 
 ## 使用方式
 
@@ -97,7 +15,8 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 ```
 
 AI 会自动：
-1. 批量更新所有子任务状态
+
+1. 批量更新所有子议题状态
 2. 聚合计算功能整体进度
 3. 更新功能文档
 4. 生成进度报告
@@ -108,131 +27,112 @@ AI 会自动：
 /dd:feature-update <feature_name> --status "已完成"
 ```
 
+## 核心功能
+
+### 1. 功能状态读取
+
+自动调用状态脚本获取功能和所有子议题信息，所有用法选项：
+
+```bash
+bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
+bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
+bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance) - 推荐用于更新操作
+bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
+bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
+bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
+```
+
+### 2. 子议题批量更新
+
+在更新功能状态前，自动遍历并更新所有子议题：
+
+- 逐个分析每个议题的实际状态
+- 智能推断议题进度和状态变更
+- 更新所有议题文档的元数据
+
+### 3. 功能整体状态计算
+
+基于所有子议题状态计算功能整体状态：
+
+- **未开始** - 所有议题都未开始
+- **进行中** - 部分议题已开始或完成
+- **已完成** - 所有议题都已完成
+
+### 4. 进度自动聚合
+
+智能计算功能整体进度：
+
+- 基于子议题完成度加权平均
+- 考虑议题优先级和复杂度
+- 更新功能文档的 progress 字段
+
+## 更新执行流程
+
+### 1. 功能信息收集
+
+```bash
+# 读取功能状态和所有子议题信息 - 所有用法选项：
+bash .claude/scripts/dd/query/get-feature.sh "<feature_name>"                    # 默认读取 overview.md
+bash .claude/scripts/dd/query/get-feature.sh --status-only "<feature_name>"     # 仅显示状态信息，不显示文档内容
+bash .claude/scripts/dd/query/get-feature.sh --all "<feature_name>"             # 读取所有文档 (overview + technical + acceptance) - 推荐用于更新分析
+bash .claude/scripts/dd/query/get-feature.sh --overview "<feature_name>"        # 仅读取功能概述文档 (overview.md)
+bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       # 仅读取技术方案文档 (technical.md)
+bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
+```
+
+### 2. 子议题批量分析和更新
+
+对每个子议题执行：
+
+1. 读取议题当前状态
+2. 分析代码变更和 TODO 完成度
+3. 智能推断议题新状态
+4. 更新议题文档
+5. 记录更新日志
+
+### 3. 功能状态聚合
+
+基于更新后的子议题状态：
+
+- 计算功能整体进度百分比
+- 确定功能整体状态
+- 识别阻塞问题和风险
+
+### 4. 功能文档更新
+
+文档位置:
+`.claude/features/<feature_name>/overview.md`
+
+更新功能主文档 `overview.md` 的关键信息：
+
+- `status` - 功能整体状态
+- `progress` - 整体完成进度
+- `issues_total` - 总议题数量
+- `issues_completed` - 已完成议题数
+
+### 5. 更新项目状态上下文
+
+功能文档更新完成后, 智能分析并更新项目整体状态:
+
+```bash
+# 1. 获取所有功能列表
+feature_list=$(find .claude/features -maxdepth 1 -type d -not -path ".claude/features" | xargs -I {} basename {})
+
+# 2. 收集所有功能状态信息
+echo "=== 项目功能状态分析 ==="
+for feature in $feature_list; do
+    echo "功能: $feature"
+    bash .claude/scripts/dd/query/get-feature.sh --status-only "$feature"
+    echo ""
+done
+
+# 3. AI 根据收集到的所有功能状态，智能分析并更新 .claude/context/current-status.md
+```
+
 ## 状态计算逻辑
 
-### 功能状态自动判断
+- **未开始**: 所有议题未开始
+- **进行中**: 部分议题已开始或完成  
+- **已完成**: 所有议题已完成
 
-```
-未开始:   所有任务状态 = "未开始"
-进行中:   存在任务状态 ∈ {"进行中", "已完成"}
-已完成:   所有任务状态 = "已完成"
-```
-
-### 进度计算公式
-
-```
-功能进度 = Σ(任务进度 × 任务权重) / Σ(任务权重)
-
-任务权重 = 任务估时 × 优先级系数
-优先级系数: 高=1.2, 中=1.0, 低=0.8
-```
-
-## 输出示例
-
-### 批量更新报告
-
-```
-=== FEATURE_UPDATE_BATCH_PROCESS ===
-功能名称: 用户认证系统
-处理时间: 2024-01-15 14:30:00
-
-📋 子任务更新结果:
-  001: 数据模型设计     [未开始 → 已完成] 0% → 100%
-  002: API 接口实现     [未开始 → 进行中] 0% → 60% 
-  003: 前端界面开发     [未开始 → 进行中] 0% → 30%
-  004: 测试用例编写     [未开始 → 未开始] 0% → 0%
-  005: 集成测试验证     [未开始 → 未开始] 0% → 0%
-
-📊 功能整体更新:
-  状态变更: 未开始 → 进行中
-  进度变更: 0% → 38%
-  完成任务: 1/5
-  预计完成: 2024-01-28
-
-🎯 下一步建议:
-  • 继续推进 002 和 003 任务
-  • 准备 004 测试用例任务
-  • 关注任务间依赖关系
-```
-
-### 功能完成确认
-
-```
-=== FEATURE_COMPLETION_DETECTED ===
-🎉 功能开发完成检测
-
-✅ 所有任务已完成 (5/5)
-✅ 验收标准全部满足
-✅ 测试用例全部通过
-
-📋 完成摘要:
-  功能: 用户认证系统
-  总工时: 120 小时
-  实际用时: 118 小时
-  完成时间: 2024-01-28 16:45:00
-
-💡 建议操作:
-  /dd:feature-start <下一个功能>  # 开始下一个功能
-```
-
-## 批量操作模式
-
-### 项目级批量更新
-
-```bash
-# 更新项目中所有功能状态
-/dd:feature-update --all
-```
-
-### 选择性批量更新
-
-```bash
-# 更新指定功能列表
-/dd:feature-update 用户认证系统,支付模块,订单管理
-```
-
-## 使用示例
-
-```bash
-# 更新单个功能的所有任务状态
-/dd:feature-update 用户认证系统
-
-# 手动设置功能完成状态
-/dd:feature-update 用户认证系统 --status "已完成"
-
-# 批量更新所有功能
-/dd:feature-update --all
-
-# 更新功能并生成详细报告
-/dd:feature-update 用户认证系统 --verbose
-```
-
-## 高级功能
-
-### 依赖关系检查
-
-自动检查功能间依赖关系：
-- 识别被依赖的功能完成情况
-- 解锁满足依赖条件的功能
-- 提供依赖路径优化建议
-
-### 里程碑跟踪
-
-支持里程碑级别的进度跟踪：
-- 按里程碑分组功能
-- 计算里程碑完成度
-- 生成项目整体进度视图
-
-### 风险预警
-
-智能识别项目风险：
-- 长时间无进展的任务
-- 超期任务和功能
-- 资源瓶颈和阻塞点
-
-## 注意事项
-
-- 功能更新会同时更新所有子任务，操作不可撤销
-- 建议在重要开发节点执行功能状态更新
-- 自动计算的进度可能需要人工调整
-- 大型功能的批量更新可能耗时较长
+进度 = 已完成议题数 / 总议题数 × 100%

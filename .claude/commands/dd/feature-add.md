@@ -129,38 +129,23 @@ EOF
 bash .claude/scripts/dd/generator/generate-acceptance.sh "<功能名>" "$acceptance_data"
 ```
 
-#### 4.4 总结对话要点
+#### 4.4 完成功能创建和记录会话
 
-使用内置脚本分析当前会话：
+基于对话内容，手动总结关键要点并记录到会话历史：
+
 ```bash
+# 查看当前会话统计信息
 bash .claude/scripts/dd/utils/get-session.sh
-```
-
-#### 4.5 完成功能创建
-
-根据脚本建议，总结关键对话要点：
-
-```bash
-conversation_data=$(cat << 'EOF'
-{
-  "feature_name": "功能名称",
-  "conversation": "总结式对话记录：用户提出XX需求，AI分析并设计了YY方案",
-  "design_decisions": "设计决策要点",
-  "technical_choices": "技术选择理由"
-}
-EOF
-)
 ```
 
 **第五步**: 完成功能创建并提供后续建议
 
 AI 直接执行以下操作:
 1. 验证所有功能文档生成完成
-2. 初始化功能状态为"未开始"
-3. 记录功能创建对话历史到会话文件
-4. 提供后续操作建议（如功能分解、开始开发等）
+2. 初始化功能状态为"设计中"
+3. 提供后续操作建议（如功能分解、开始开发等）
 
-**优势**: 使用 `get-session.sh` 脚本自动获取对话历史，减少手动记录的思考成本和出错概率
+**优势**: 通过深度对话确保功能需求清晰，生成的文档内容准确完整
 
 ## 使用方式
 
@@ -227,7 +212,8 @@ feature_data=$(cat << 'EOF'
   "core_features": "- 用户注册功能\n- 用户登录功能\n- 密码重置功能\n- 邮箱验证功能",
   "feature_boundary_include": "- 基础的注册登录流程\n- 密码重置功能\n- 邮箱验证机制",
   "feature_boundary_exclude": "- 第三方登录集成\n- 多因素认证\n- 高级权限管理",
-  "use_scenarios": "- 新用户注册流程\n- 已有用户登录场景\n- 忘记密码重置场景"
+  "use_scenarios": "- 新用户注册流程\n- 已有用户登录场景\n- 忘记密码重置场景",
+  "dependencies": "邮件服务、数据库系统"
 }
 EOF
 )

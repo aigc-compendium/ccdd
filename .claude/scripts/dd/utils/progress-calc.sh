@@ -1,26 +1,26 @@
 #!/bin/bash
 
 # 进度计算算法
-# 提供功能和任务进度的精确计算和同步
+# 提供功能和议题进度的精确计算和同步
 
-# 计算任务进度
-calc_task_progress() {
-  local task_file="$1"
+# 计算议题进度
+calc_issue_progress() {
+  local issue_file="$1"
   
-  if [ ! -f "$task_file" ]; then
+  if [ ! -f "$issue_file" ]; then
     echo "0"
     return 1
   fi
   
   # 统计 Todo 项目
-  local completed_todos=$(grep -c "- \[x\]" "$task_file" 2>/dev/null || echo "0")
-  local pending_todos=$(grep -c "- \[ \]" "$task_file" 2>/dev/null || echo "0")
+  local completed_todos=$(grep -c "- \[x\]" "$issue_file" 2>/dev/null || echo "0")
+  local pending_todos=$(grep -c "- \[ \]" "$issue_file" 2>/dev/null || echo "0")
   local total_todos=$((completed_todos + pending_todos))
   
   if [ "$total_todos" -eq 0 ]; then
-    # 没有 Todo 项时, 检查任务状态
-    local task_status=$(grep "^status:" "$task_file" | sed 's/^status: *//' 2>/dev/null)
-    case "$task_status" in
+    # 没有 Todo 项时, 检查议题状态
+    local issue_status=$(grep "^status:" "$issue_file" | sed 's/^status: *//' 2>/dev/null)
+    case "$issue_status" in
       "已完成") echo "100" ;;
       "进行中") echo "50" ;;
       *) echo "0" ;;
@@ -32,24 +32,24 @@ calc_task_progress() {
   fi
 }
 
-# 更新任务进度
-update_task_progress() {
-  local task_file="$1"
-  local progress=$(calc_task_progress "$task_file")
+# 更新议题进度
+update_issue_progress() {
+  local issue_file="$1"
+  local progress=$(calc_issue_progress "$issue_file")
   
-  if [ -f "$task_file" ]; then
+  if [ -f "$issue_file" ]; then
     # 使用临时文件安全更新
-    local temp_file="${task_file}.tmp"
+    local temp_file="${issue_file}.tmp"
     
     # 更新进度字段
-    sed "s/^progress:.*/progress: $progress/" "$task_file" > "$temp_file"
+    sed "s/^progress:.*/progress: $progress/" "$issue_file" > "$temp_file"
     
     if [ $? -eq 0 ]; then
-      mv "$temp_file" "$task_file"
-      echo "📊 任务进度已更新: $progress%"
+      mv "$temp_file" "$issue_file"
+      echo "📊 议题进度已更新: $progress%"
     else
       rm -f "$temp_file"
-      echo "❌ 任务进度更新失败"
+      echo "❌ 议题进度更新失败"
       return 1
     fi
   fi
@@ -65,31 +65,31 @@ calc_feature_progress() {
     return 1
   fi
   
-  # 统计任务完成情况
-  local total_tasks=0
-  local completed_tasks=0
+  # 统计议题完成情况
+  local total_issues=0
+  local completed_issues=0
   local total_progress=0
   
-  for task_file in "$feature_dir/tasks"/*.md; do
-    if [ -f "$task_file" ]; then
-      total_tasks=$((total_tasks + 1))
+  for issue_file in "$feature_dir/issues"/*.md; do
+    if [ -f "$issue_file" ]; then
+      total_issues=$((total_issues + 1))
       
-      local task_status=$(grep "^status:" "$task_file" | sed 's/^status: *//' 2>/dev/null)
-      local task_progress=$(calc_task_progress "$task_file")
+      local issue_status=$(grep "^status:" "$issue_file" | sed 's/^status: *//' 2>/dev/null)
+      local issue_progress=$(calc_issue_progress "$issue_file")
       
-      if [ "$task_status" = "已完成" ]; then
-        completed_tasks=$((completed_tasks + 1))
-        task_progress=100
+      if [ "$issue_status" = "已完成" ]; then
+        completed_issues=$((completed_issues + 1))
+        issue_progress=100
       fi
       
-      total_progress=$((total_progress + task_progress))
+      total_progress=$((total_progress + issue_progress))
     fi
   done
   
-  if [ "$total_tasks" -eq 0 ]; then
+  if [ "$total_issues" -eq 0 ]; then
     echo "0"
   else
-    local feature_progress=$((total_progress / total_tasks))
+    local feature_progress=$((total_progress / total_issues))
     echo "$feature_progress"
   fi
 }
@@ -106,8 +106,8 @@ update_feature_progress() {
   fi
   
   # 计算统计信息
-  local total_tasks=$(find "$feature_dir/tasks" -name "*.md" -type f 2>/dev/null | wc -l)
-  local completed_tasks=$(find "$feature_dir/tasks" -name "*.md" -exec grep -l "^status: 已完成" {} \; 2>/dev/null | wc -l)
+  local total_issues=$(find "$feature_dir/issues" -name "*.md" -type f 2>/dev/null | wc -l)
+  local completed_issues=$(find "$feature_dir/issues" -name "*.md" -exec grep -l "^status: 已完成" {} \; 2>/dev/null | wc -l)
   local progress=$(calc_feature_progress "$feature_name")
   
   # 使用临时文件安全更新
@@ -115,14 +115,14 @@ update_feature_progress() {
   
   # 更新所有相关字段
   sed -e "s/^progress:.*/progress: $progress/" \
-      -e "s/^tasks_total:.*/tasks_total: $total_tasks/" \
-      -e "s/^tasks_completed:.*/tasks_completed: $completed_tasks/" \
+      -e "s/^issues_total:.*/issues_total: $total_issues/" \
+      -e "s/^issues_completed:.*/issues_completed: $completed_issues/" \
       "$feature_file" > "$temp_file"
   
   if [ $? -eq 0 ]; then
     mv "$temp_file" "$feature_file"
     echo "📊 功能进度已更新: $feature_name ($progress%)"
-    echo "  总任务: $total_tasks, 已完成: $completed_tasks"
+    echo "  总议题: $total_issues, 已完成: $completed_issues"
   else
     rm -f "$temp_file"
     echo "❌ 功能进度更新失败"
@@ -132,7 +132,7 @@ update_feature_progress() {
 
 # 同步所有进度
 sync_all_progress() {
-  echo "🔄 开始同步所有功能和任务进度..."
+  echo "🔄 开始同步所有功能和议题进度..."
   local updated_count=0
   
   # 遍历所有功能
@@ -142,10 +142,10 @@ sync_all_progress() {
       
       echo "📁 处理功能: $feature_name"
       
-      # 更新该功能的所有任务进度
-      for task_file in "$feature_dir/tasks"/*.md; do
-        if [ -f "$task_file" ]; then
-          update_task_progress "$task_file"
+      # 更新该功能的所有议题进度
+      for issue_file in "$feature_dir/issues"/*.md; do
+        if [ -f "$issue_file" ]; then
+          update_issue_progress "$issue_file"
         fi
       done
       
@@ -179,17 +179,17 @@ generate_progress_report() {
     
     local feature_dir=".claude/features/$feature_name"
     echo ""
-    echo "📝 任务详情: "
+    echo "📝 议题详情: "
     
-    local task_num=1
-    for task_file in "$feature_dir/tasks"/*.md; do
-      if [ -f "$task_file" ]; then
-        local task_name=$(grep "^name:" "$task_file" | sed 's/^name: *//')
-        local task_status=$(grep "^status:" "$task_file" | sed 's/^status: *//')
-        local task_progress=$(calc_task_progress "$task_file")
+    local issue_num=1
+    for issue_file in "$feature_dir/issues"/*.md; do
+      if [ -f "$issue_file" ]; then
+        local issue_name=$(grep "^name:" "$issue_file" | sed 's/^name: *//')
+        local issue_status=$(grep "^status:" "$issue_file" | sed 's/^status: *//')
+        local issue_progress=$(calc_issue_progress "$issue_file")
         
-        printf "  %03d. %-30s %s (%s%%)\n" "$task_num" "$task_name" "$task_status" "$task_progress"
-        task_num=$((task_num + 1))
+        printf "  %03d. %-30s %s (%s%%)\n" "$issue_num" "$issue_name" "$issue_status" "$issue_progress"
+        issue_num=$((issue_num + 1))
       fi
     done
     
@@ -306,11 +306,11 @@ main() {
   local param2="$3"
   
   case "$command" in
-    "task")
+    "issue")
       if [ -n "$param1" ]; then
-        update_task_progress "$param1"
+        update_issue_progress "$param1"
       else
-        echo "用法: $0 task <任务文件路径>"
+        echo "用法: $0 issue <议题文件路径>"
       fi
       ;;
     "feature")
@@ -333,11 +333,11 @@ main() {
         echo "用法: $0 export <输出文件> [json|csv]"
       fi
       ;;
-    "calc-task")
+    "calc-issue")
       if [ -n "$param1" ]; then
-        calc_task_progress "$param1"
+        calc_issue_progress "$param1"
       else
-        echo "用法: $0 calc-task <任务文件路径>"
+        echo "用法: $0 calc-issue <议题文件路径>"
       fi
       ;;
     "calc-feature")
@@ -350,15 +350,15 @@ main() {
     *)
       echo "进度计算工具"
       echo ""
-      echo "用法: $0 {task|feature|sync|report|export|calc-task|calc-feature} [参数...]"
+      echo "用法: $0 {issue|feature|sync|report|export|calc-issue|calc-feature} [参数...]"
       echo ""
       echo "命令说明: "
-      echo "  task <任务文件>     - 更新指定任务的进度"
+      echo "  issue <议题文件>    - 更新指定议题的进度"
       echo "  feature <功能名>    - 更新指定功能的进度"
-      echo "  sync                - 同步所有功能和任务进度"
+      echo "  sync                - 同步所有功能和议题进度"
       echo "  report [功能名]     - 生成进度报告"
       echo "  export <文件> [格式] - 导出进度数据 (json|csv)"
-      echo "  calc-task <任务文件> - 计算任务进度（不更新）"
+      echo "  calc-issue <议题文件> - 计算议题进度（不更新）"
       echo "  calc-feature <功能名> - 计算功能进度（不更新）"
       exit 1
       ;;
