@@ -71,4 +71,8 @@ allowed-tools: Read, Bash, Glob
   总功能数: {N-1}个
   删除功能: {功能名}
   删除时间: {时间戳}
+
+💡 建议下一步操作:
+   /dd:status  - 查看项目整体状态
+   /dd:feature-add <新功能名>  - 添加其他功能
 ```

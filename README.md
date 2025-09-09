@@ -282,9 +282,21 @@
 ## 📚 更多资源
 
 - 查看 `/dd:help` 获取完整命令列表
+- **🌐 可视化文档**: [打开 CCDD 工作流展示页面](.claude/ui/properties/index.html)
 - 参考示例功能了解完整工作流
 - 使用 `/dd:chat` 进行智能咨询
 - 查看 `design.md` 了解系统设计理念
+
+### 📖 可视化文档使用
+
+```bash
+# 启动本地服务器
+cd .claude/ui/properties
+node server.js
+
+# 然后访问 http://localhost:3000
+# 查看完整的 22 个命令和 5 大工作流程
+```
 
 ## 🛠️ 开发工具
 

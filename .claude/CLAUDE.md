@@ -64,11 +64,11 @@
 
 ## DD 命令系统
 
-所有工作流命令使用 `/dd:` 前缀, 共 21 个命令:
+所有工作流命令使用 `/dd:` 前缀, 共 22 个命令:
 
 **智能对话类**: `/dd:chat`
 **帮助状态类**: `/dd:help` `/dd:status` `/dd:version`
-**项目初始化类**: `/dd:init` `/dd:prd`
+**项目初始化类**: `/dd:init` `/dd:prd` `/dd:ui`
 **架构管理类**: `/dd:framework-init` `/dd:framework-audit` `/dd:framework-adjust` `/dd:prd-decompose`
 **功能管理类**: `/dd:feature-add` `/dd:feature-decompose` `/dd:feature-start` `/dd:feature-update` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
 **议题管理类**: `/dd:issue-start` `/dd:issue-update`
