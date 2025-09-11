@@ -45,7 +45,7 @@ allowed-tools: Task, Write, Read
 ### 2. 合理的议题粒度
 
 - 单个议题功能完整独立
-- 避免过度拆分或合并  
+- 避免过度拆分或合并
 - 便于进度跟踪和管理
 
 ### 3. 依赖关系清晰
@@ -114,7 +114,7 @@ bash .claude/scripts/dd/generator/generate-issue.sh "<feature_name>" "<issue_id>
 # 扫描生成的议题文件，获取议题列表
 echo "=== 更新功能议题清单 ==="
 for issue_file in .claude/features/<feature_name>/issues/*.md; do
-    issue_id=$(basename "$issue_file" .md)  
+    issue_id=$(basename "$issue_file" .md)
     issue_name=$(grep "^name:" "$issue_file" | cut -d: -f2- | xargs)
     echo "议题 $issue_id: $issue_name"
 done
@@ -123,7 +123,7 @@ done
 # 确保格式为:
 # ## issues
 # - 001
-# - 002  
+# - 002
 # - 003
 ```
 

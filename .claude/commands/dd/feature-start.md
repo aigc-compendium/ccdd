@@ -32,19 +32,19 @@ Options:
 
 ### Hooks 阶段定义
 
-**Before 阶段** - 功能开发执行前: 
+**Before 阶段** - 功能开发执行前:
 
 - 触发时机: 在功能开发启动之前
 - 用途: 状态读取、环境检查、权限验证、前置条件确认
 - 示例: 读取功能状态、检查开发分支、验证权限、确认依赖功能状态
 
-**Running 阶段** - 命令执行过程中: 
+**Running 阶段** - 命令执行过程中:
 
 - 触发时机: 在状态判断和策略制定过程中
 - 用途: 执行过程监控、状态验证、中间结果处理
 - 示例: 记录执行日志、发送状态通知、执行自定义检查
 
-**After 阶段** - 命令执行完成后: 
+**After 阶段** - 命令执行完成后:
 
 - 触发时机: 在功能开发启动完成后
 - 用途: 后续处理、通知发送、状态同步
@@ -52,7 +52,7 @@ Options:
 
 ### Hooks 配置说明
 
-如果 hooks 返回错误或阻塞信号，命令执行将: 
+如果 hooks 返回错误或阻塞信号，命令执行将:
 
 - **Before hooks 失败**: 停止命令执行，显示错误信息
 - **Running hooks 失败**: 根据配置决定是否继续执行
@@ -62,7 +62,7 @@ Options:
 
 ## 辅助脚本
 
-命令通过 hooks 机制配合查询脚本获取状态信息，常用脚本: 
+命令通过 hooks 机制配合查询脚本获取状态信息，常用脚本:
 
 ```bash
 # 获取功能状态 - 所有用法选项：
@@ -76,7 +76,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 # 获取 Git 信息
 bash .claude/scripts/dd/utils/git-info.sh <command>
 
-# Git 信息查询示例: 
+# Git 信息查询示例:
 bash .claude/scripts/dd/utils/git-info.sh branch              # 当前分支
 bash .claude/scripts/dd/utils/git-info.sh feature <name>      # 检查功能分支
 bash .claude/scripts/dd/utils/git-info.sh clean              # 工作区是否干净
@@ -87,7 +87,7 @@ bash .claude/scripts/dd/utils/git-info.sh all                # 所有信息
 
 ### Before
 
-执行用户配置的前置钩子: 
+执行用户配置的前置钩子:
 
 - **Git 安全检查** - 通过查询脚本获取功能状态和 Git 分支信息, 确保 Git 工作区分支与功能分支一致; 检查 Git 工作区是否干净, 是否有远程更新
 - **检查功能文档** - 确保 overview,technical,acceptance 文档存在, 否则拒绝继续执行

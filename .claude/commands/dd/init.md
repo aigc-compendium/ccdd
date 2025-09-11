@@ -4,20 +4,23 @@ allowed-tools: Task, Read, Write, Edit, Bash
 
 # DD 项目初始化
 
-## 基本信息
+为项目初始化 CCDD Helper 系统, 支持: 新项目创建/现有项目分析
 
-**功能**: 为项目初始化 CCDD Helper 系统
-**支持**: 新项目创建 | 现有项目分析
+## 使用方式
 
-**使用方式**:
 ```bash
 /dd:init                # 新项目初始化
 /dd:init --analyze      # 现有项目分析初始化
 ```
 
+Options:
+
+- `--analyze`: - 现有项目分析初始化
+
 ## 核心流程
 
 ### 模式选择
+
 - **新项目模式**: 引导用户完成项目规划和技术选型
 - **分析模式**: 扫描现有项目并优化管理体系
 
@@ -26,13 +29,15 @@ allowed-tools: Task, Read, Write, Edit, Bash
 ### 新项目模式
 
 **步骤 1**: 使用 deep-thinker 智能体收集项目基础信息
+
 - 项目名称、类型、规模、目标用户
 - 技术选型倾向、团队技术栈经验
 
 **步骤 2**: 确认关键技术决策
-- **项目类型**: Web/移动/桌面应用 | 命令行工具 | API服务 | 工具库 | 架构模式
+
+- **项目类型**: Web/移动/桌面应用 | 命令行工具 | API 服务 | 工具库 | 架构模式
 - **开发语言**: 主要语言选择 | 多语言开发需求
-- **UI技术**: 前端技术栈 | 移动端适配需求  
+- **UI 技术**: 前端技术栈 | 移动端适配需求
 - **数据存储**: 数据库类型 | 性能要求
 - **部署运维**: 部署环境 | 容器化需求
 
@@ -49,15 +54,18 @@ AI 主动提出质疑和建议:
 ### 现有项目分析模式
 
 **步骤 1**: 执行项目快速扫描
+
 ```bash
 bash .claude/scripts/dd/query/project-scan.sh
 ```
-扫描信息: 文件结构 | 技术栈识别 | 配置文件 | Git状态 | 潜在问题
+
+扫描信息: 文件结构 | 技术栈识别 | 配置文件 | Git 状态 | 潜在问题
 **优势**: 比智能体分析快 10-20 倍
 
 **步骤 2**: 技术关键点确认 (跳过基础问题)
+
 - **架构评估**: 当前架构优化需求 | 技术债务识别 | 模块化程度
-- **技术栈**: 现有框架适用性 | UI技术优化 | 存储方案调整 | 新组件引入
+- **技术栈**: 现有框架适用性 | UI 技术优化 | 存储方案调整 | 新组件引入
 - **项目定位**: 实际类型确认 | 功能复杂度 | 业务边界 | 发展方向
 - **开发部署**: 工具链现状 | 构建流程 | 运维方式 | 容器化改造
 
@@ -67,6 +75,7 @@ bash .claude/scripts/dd/query/project-scan.sh
 
 **步骤 4**: AI 生成项目内容
 基于对话结果，生成个性化的项目上下文内容:
+
 - **项目描述内容** - 基于对话的具体项目信息
 - **技术栈详情** - 深入的技术选型分析
 - **架构设计** - 个性化的架构方案
@@ -75,9 +84,11 @@ bash .claude/scripts/dd/query/project-scan.sh
 **步骤 5**: 总结对话要点
 
 使用内置脚本分析当前会话：
+
 ```bash
 bash .claude/scripts/dd/utils/get-session.sh
 ```
+
 根据脚本建议，总结关键决策和结论作为 conversation 数据（避免冗长记录）
 
 **步骤 6**: 执行 after-init.sh 后处理脚本
@@ -87,15 +98,16 @@ bash .claude/scripts/dd/after-init.sh "$structured_data"
 ```
 
 **structured_data 数据结构**:
+
 ```json
 {
   "project_name": "项目名称",
   "project_type": "项目类型",
   "tech_stack": "技术栈",
-  "architecture": "架构模式", 
+  "architecture": "架构模式",
   "conversation": "通过 /messages 获取的完整对话历史",
   "project_content": "AI生成的项目描述内容",
-  "tech_content": "AI生成的技术栈详情", 
+  "tech_content": "AI生成的技术栈详情",
   "architecture_content": "AI生成的架构设计",
   "status_content": "AI生成的项目状态"
 }
@@ -125,7 +137,7 @@ bash .claude/scripts/dd/after-init.sh "$structured_data"
 ## 文档规范
 
 **中英文间距**: 英文单词与中文字符间必须有空格
-**示例**: `这是一个 Web 应用项目` ✓  `这是一个Web应用项目` ✗
+**示例**: `这是一个 Web 应用项目` ✓ `这是一个Web应用项目` ✗
 
 ## 深度思考要点
 

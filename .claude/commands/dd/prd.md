@@ -48,7 +48,7 @@ AI 质疑和建议:
 ✅ PRD 文档生成完成！
 📝 建议下一步操作:
    /dd:prd-decompose  - 将需求拆解为功能模块
-   
+
 💡 或直接进行架构设计:
    /dd:framework-init  - 开始架构设计
 ```

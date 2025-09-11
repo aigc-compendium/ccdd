@@ -21,7 +21,7 @@ allowed-tools: Task, Write, Read, Edit, MultiEdit
 ### 适用项目类型
 
 - Web 应用项目
-- 移动端 H5 项目  
+- 移动端 H5 项目
 - 管理后台系统
 - 用户界面展示类项目
 
@@ -42,6 +42,7 @@ allowed-tools: Task, Write, Read, Edit, MultiEdit
 ```
 
 基于注入的上下文信息分析：
+
 - 项目类型和用户群体
 - 功能需求和用户场景
 - 技术栈和设计约束
@@ -62,6 +63,7 @@ allowed-tools: Task, Write, Read, Edit, MultiEdit
 基于讨论结果生成原型文件到 `.claude/ui/properties/` 目录：
 
 #### 文件结构
+
 ```
 .claude/ui/properties/
 ├── index.html          # 主页面（包含 Tailwind CSS CDN）
@@ -81,6 +83,7 @@ allowed-tools: Task, Write, Read, Edit, MultiEdit
 #### 静态服务器脚本
 
 同时生成 `server.js` 文件用于本地预览，支持：
+
 - 静态文件服务（HTML、CSS、JS、图片等）
 - 默认端口 3000，支持环境变量配置
 - 404 错误页面（使用 Tailwind CSS 样式）
@@ -94,6 +97,7 @@ node server.js
 ```
 
 #### 生成内容特点
+
 - **Tailwind CSS 驱动**：使用 Tailwind CSS 实用优先的方式构建现代化 UI
 - **响应式布局**：使用 Tailwind 响应式前缀适配不同设备
 - **交互演示**：JavaScript 实现关键交互功能的演示
@@ -117,10 +121,10 @@ node server.js
 ```
 📸 请手动截图保存到:
    .claude/ui/images/
-   
+
 建议截图内容:
    - 主要页面的桌面端显示效果
-   - 移动端响应式布局效果  
+   - 移动端响应式布局效果
    - 关键交互状态截图
    - 用户流程操作演示图
 ```
@@ -128,17 +132,20 @@ node server.js
 ## 技术规范
 
 ### HTML 要求
+
 - 使用语义化 HTML5 标签
 - 合理的文档结构和 meta 信息
 - 无障碍访问属性（alt、aria-label 等）
 
-### CSS 要求  
+### CSS 要求
+
 - **必须使用 Tailwind CSS**：通过 CDN 引入 Tailwind CSS 进行样式开发
 - 响应式设计（使用 Tailwind 的响应式前缀）
 - 组件化样式架构（Tailwind 实用优先的方式）
 - 现代化设计风格（使用 Tailwind 的设计系统）
 
 ### JavaScript 要求
+
 - 原生 ES6+ 语法
 - 模块化代码组织
 - 事件驱动的交互逻辑
@@ -147,18 +154,21 @@ node server.js
 ## 设计原则
 
 ### 用户体验优先
+
 - 直观的信息架构
-- 流畅的用户操作流程  
+- 流畅的用户操作流程
 - 清晰的视觉层次
 - 合理的交互反馈
 
 ### 技术实现简洁
+
 - 轻量级代码实现
 - 快速加载和渲染
 - 最小化外部依赖
 - 易于后续开发集成
 
 ### 可维护性
+
 - 清晰的代码结构
 - 详细的注释说明
 - 标准化的命名规范
@@ -209,17 +219,20 @@ node server.js
 ## 最佳实践
 
 ### 原型设计
+
 - 关注核心用户流程，避免过度设计
 - 使用真实数据而非 Lorem ipsum
 - 保持设计的一致性和可用性
 
 ### 技术实现
+
 - 优先使用 Tailwind CSS 和现代 Web 标准
 - 通过 CDN 引入 Tailwind CSS，无需构建工具
 - 确保代码的可读性和可维护性
 - 预留后续开发的扩展空间
 
 ### 用户测试
+
 - 邀请目标用户参与原型测试
 - 记录用户的操作行为和反馈
 - 基于测试结果优化设计方案

@@ -58,7 +58,7 @@ Options:
 
 ### Hooks 配置说明
 
-如果 hooks 返回错误或阻塞信号，命令执行将: 
+如果 hooks 返回错误或阻塞信号，命令执行将:
 
 - **Before hooks 失败**: 停止议题执行，显示错误信息和解决建议
 - **Running hooks 失败**: 根据配置决定是否继续执行议题
@@ -70,7 +70,7 @@ Options:
 
 ### Before
 
-执行用户配置的前置钩子: 
+执行用户配置的前置钩子:
 
 - **Git 安全检查** - 通过查询脚本获取议题状态和 Git 分支信息, 确保 Git 工作区分支与议题所属功能分支一致; 检查 Git 工作区是否干净, 是否有远程更新
 - **议题依赖检查** - 通过议题状态脚本检查前置议题完成情况, 确保: 议题文档存在, 前置议题已完成
@@ -139,7 +139,7 @@ Options:
 
 ## 辅助脚本
 
-命令通过 hooks 机制配合查询脚本获取状态信息，常用脚本: 
+命令通过 hooks 机制配合查询脚本获取状态信息，常用脚本:
 
 ```bash
 # 获取议题状态
@@ -156,7 +156,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 # 获取 Git 信息
 bash .claude/scripts/dd/utils/git-info.sh <command>
 
-# Git 信息查询示例: 
+# Git 信息查询示例:
 bash .claude/scripts/dd/utils/git-info.sh branch              # 当前分支
 bash .claude/scripts/dd/utils/git-info.sh feature <name>      # 检查功能分支
 bash .claude/scripts/dd/utils/git-info.sh clean              # 工作区是否干净

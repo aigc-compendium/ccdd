@@ -4,7 +4,7 @@
 
 ## ⚠️ 绝对规则 - 最高优先级
 
-**必须首先阅读并严格遵守: `.claude/rules/absolute.md`**
+**必须首先阅读并严格遵守: `.claude/rules/absolute.md`, `.claude/rules/root.md`**
 
 这些规则绝不可违反, 包括:
 

@@ -63,6 +63,7 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 ```
 
 AI 会自动：
+
 1. 读取当前议题状态
 2. 分析代码变更和 TODO 完成情况
 3. 智能推断新的状态和进度
@@ -75,6 +76,7 @@ AI 会自动：
 ```
 
 支持的参数：
+
 - `--status` - 指定新状态
 - `--progress` - 指定进度百分比
 - `--notes` - 添加更新说明
@@ -97,6 +99,7 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 ### 3. 智能状态推断
 
 基于收集的信息，AI 智能判断：
+
 - 议题的实际完成情况
 - 合适的状态转换
 - 准确的进度百分比
@@ -107,6 +110,7 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 `.claude/<feature>/issues/<issue_id>.md`
 
 更新议题文档的元数据：
+
 - `status` - 议题状态
 - `progress` - 完成进度
 - `updated_at` - 更新时间
