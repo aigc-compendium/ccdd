@@ -66,18 +66,21 @@
 
 所有工作流命令使用 `/dd:` 前缀, 共 22 个命令:
 
-**智能对话类**: `/dd:chat`
-**帮助状态类**: `/dd:help` `/dd:status` `/dd:version`
-**项目初始化类**: `/dd:init` `/dd:prd` `/dd:ui`
-**架构管理类**: `/dd:framework-init` `/dd:framework-audit` `/dd:framework-adjust` `/dd:prd-decompose`
-**功能管理类**: `/dd:feature-add` `/dd:feature-decompose` `/dd:feature-start` `/dd:feature-update` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
-**议题管理类**: `/dd:issue-start` `/dd:issue-update`
-**代码质量类**: `/dd:code-reflect`
+**智能对话类** (1个): `/dd:chat`
+**帮助状态类** (3个): `/dd:help` `/dd:status` `/dd:version`
+**项目初始化类** (4个): `/dd:init` `/dd:init-local` `/dd:prd` `/dd:ui`
+**架构管理类** (4个): `/dd:framework-init` `/dd:framework-audit` `/dd:framework-adjust` `/dd:prd-decompose`
+**功能管理类** (7个): `/dd:feature-add` `/dd:feature-decompose` `/dd:feature-start` `/dd:feature-update` `/dd:feature-status` `/dd:feature-refactory` `/dd:feature-remove`
+**议题管理类** (2个): `/dd:issue-start` `/dd:issue-update`
+**代码质量类** (1个): `/dd:code-reflect`
+
+**总计 22 个命令**
 
 ### 典型工作流程
 
 ```bash
-/dd:init                      # 项目初始化 (支持 --analyze 参数)
+/dd:init                      # 项目初始化
+/dd:init-local               # 本地项目初始化
 /dd:prd                      # 需求设计
 /dd:framework-init           # 架构设计
 /dd:feature-add 用户认证      # 添加功能
@@ -99,6 +102,54 @@
 ├── features/        # 功能定义和议题
 └── scripts/         # 实用工具脚本
 ```
+
+## 实用工具脚本
+
+系统提供了丰富的实用工具脚本来支持开发工作流:
+
+### 通用信息获取工具
+
+**位置**: `.claude/scripts/dd/utils/info-getter.sh`
+
+**功能**: 通过入参返回系统信息和项目文件内容
+
+**使用方法**:
+```bash
+# 时间信息
+.claude/scripts/dd/utils/info-getter.sh time           # 本地时间 (兼容 mac/linux)
+.claude/scripts/dd/utils/info-getter.sh datetime       # 详细日期时间
+
+# 项目文件内容
+.claude/scripts/dd/utils/info-getter.sh project        # 项目介绍
+.claude/scripts/dd/utils/info-getter.sh architecture   # 架构文件
+.claude/scripts/dd/utils/info-getter.sh tech-stack     # 技术栈文件
+.claude/scripts/dd/utils/info-getter.sh requirements   # 需求文件
+
+# 灵活文件获取
+.claude/scripts/dd/utils/info-getter.sh context <filename>  # 获取指定上下文文件
+.claude/scripts/dd/utils/info-getter.sh all-context         # 列出所有可用文件
+
+# 系统信息
+.claude/scripts/dd/utils/info-getter.sh system         # 系统基础信息
+.claude/scripts/dd/utils/info-getter.sh all           # 完整信息报告
+```
+
+### Git 信息查询工具
+
+**位置**: `.claude/scripts/dd/utils/git-info.sh`
+
+**功能**: 提供精简的 Git 状态信息
+```bash
+.claude/scripts/dd/utils/git-info.sh branch    # 当前分支名
+.claude/scripts/dd/utils/git-info.sh status    # 工作区状态
+.claude/scripts/dd/utils/git-info.sh clean     # 工作区是否干净
+```
+
+### 会话信息获取工具
+
+**位置**: `.claude/scripts/dd/utils/get-session.sh`
+
+**功能**: 获取当前 Claude Code 会话的对话历史和统计信息
 
 ## 配置管理
 

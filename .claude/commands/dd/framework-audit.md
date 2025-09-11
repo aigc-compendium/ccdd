@@ -2,45 +2,53 @@
 allowed-tools: Task, Read, Glob, Grep
 ---
 
-# DD 架构审计
+# Framework Audit
 
-深度分析现有架构合理性, 识别架构缺陷和改进点.
+深度分析现有架构合理性，识别架构缺陷和改进点。
 
-## 功能概述
+## Usage
 
-全面审计项目架构:
+```bash
+/dd:framework-audit
+```
+
+## Instructions
+
+### 1. 功能概述
+
+全面审计项目架构：
 
 - 代码组织结构分析
 - 技术选型合理性评估
 - 性能和扩展性问题识别
 - 技术债务和重构建议
 
-## 审计维度
+### 2. 审计维度
 
-### 1. 代码架构
+**代码架构**
 
 - 模块划分和职责分离
 - 依赖关系和耦合度
 - 代码复用和重复分析
 - 设计模式使用情况
 
-### 2. 技术选型
+**技术选型**
 
 - 技术栈版本和兼容性
 - 性能特征和瓶颈
 - 社区支持和维护状态
 - 团队熟悉度匹配
 
-### 3. 扩展性评估
+**扩展性评估**
 
 - 水平扩展能力
 - 功能扩展便利性
 - 配置和环境管理
 - 部署和运维复杂度
 
-## 执行流程
+### 3. 执行流程
 
-使用 Task 工具调用 code-analyzer 智能体进行深度分析:
+使用 Task 工具调用 code-analyzer 智能体进行深度分析：
 
 ```
 扫描项目目录结构
@@ -50,9 +58,9 @@ allowed-tools: Task, Read, Glob, Grep
 生成改进建议报告
 ```
 
-## 输出结果
+### 4. 输出结果
 
-生成 `.claude/context/architecture-audit.md`:
+生成 `.claude/context/architecture-audit.md`：
 
 ```markdown
 # 架构审计报告
@@ -77,7 +85,7 @@ allowed-tools: Task, Read, Glob, Grep
 - 架构演进方案
 ```
 
-## 完成后提示
+### 5. 完成后提示
 
 ```
 🔍 架构审计完成！
@@ -85,3 +93,7 @@ allowed-tools: Task, Read, Glob, Grep
    /dd:framework-adjust  - 调整架构
    或 /dd:feature-add    - 继续功能开发
 ```
+
+## Important Notes
+
+使用专门的代码分析智能体深度审计项目架构，识别问题并提供改进建议。

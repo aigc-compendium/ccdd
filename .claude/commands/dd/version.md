@@ -2,22 +2,30 @@
 allowed-tools: Read
 ---
 
-# DD 版本信息
+# Version
 
-显示 CCDD Helper 系统的版本信息和组件状态.
+显示 CCDD Helper 系统的版本信息和组件状态。
 
-## 功能概述
+## Usage
 
-显示:
+```bash
+/dd:version
+```
+
+## Instructions
+
+### 1. 功能概述
+
+显示：
 
 - 系统版本号
 - 组件完整性检查
 - 配置文件状态
 - 更新日志摘要
 
-## 执行方式
+### 2. 执行方式
 
-读取配置文件并显示:
+读取配置文件并显示：
 
 ```
 📚 CCDD Helper - Claude Code 深度开发工作流系统
@@ -38,11 +46,15 @@ allowed-tools: Read
   活跃议题: {Y个}
 ```
 
-## 系统健康检查
+### 3. 系统健康检查
 
-验证关键文件存在:
+验证关键文件存在：
 
 - `.claude/CLAUDE.md`
 - `.claude/rules/absolute.md`
 - `.claude/context/` 目录结构
 - 必需的命令和脚本文件
+
+## Important Notes
+
+提供 DD 工作流系统版本信息和完整性检查。

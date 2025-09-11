@@ -34,6 +34,7 @@ conversation=$(echo "$init_data" | jq -r '.conversation // ""')
 project_content=$(echo "$init_data" | jq -r '.project_content // ""')
 tech_content=$(echo "$init_data" | jq -r '.tech_content // ""') 
 architecture_content=$(echo "$init_data" | jq -r '.architecture_content // ""')
+requirements_content=$(echo "$init_data" | jq -r '.requirements_content // ""')
 status_content=$(echo "$init_data" | jq -r '.status_content // ""')
 
 # 参数验证和提示
@@ -60,6 +61,7 @@ echo "🔍 验证AI生成内容完整性..."
 validate_content "$project_content" "项目描述"
 validate_content "$tech_content" "技术栈详情" 
 validate_content "$architecture_content" "架构设计"
+validate_content "$requirements_content" "需求文档"
 validate_content "$status_content" "项目状态"
 echo ""
 
@@ -243,6 +245,57 @@ EOF
     echo "  ✅ architecture.md (默认模板)"
 fi
 
+# 生成 requirements.md - 使用AI内容或回退到模板
+if validate_content "$requirements_content" >/dev/null 2>&1; then
+    # 使用 AI 生成的内容
+    cat > .claude/context/requirements.md << EOF
+---
+last_updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+version: 1.0.0
+project_type: $project_type
+---
+
+$requirements_content
+EOF
+    echo "  ✅ requirements.md (AI生成内容)"
+else
+    # 使用基础模板
+    cat > .claude/context/requirements.md << EOF
+---
+last_updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+version: 1.0.0
+project_type: $project_type
+---
+
+# 项目需求文档
+
+## 项目概述
+$project_name 是一个 $project_type 项目。
+
+## 技术要求
+- 主要技术栈: $tech_stack
+- 架构模式: $architecture
+
+## 功能需求
+- 待通过 /dd:feature-add 添加具体功能需求
+
+## 非功能需求
+- 性能要求: 待明确
+- 安全要求: 待明确  
+- 可维护性: 遵循最佳实践
+- 可扩展性: 支持后续功能扩展
+
+## 约束条件
+- 技术约束: 基于选定的技术栈
+- 时间约束: 待确定
+- 资源约束: 待确定
+
+## 下一步行动
+使用 /dd:feature-add 添加具体功能需求，完善需求文档。
+EOF
+    echo "  ✅ requirements.md (默认模板)"
+fi
+
 # 生成 current-status.md - 使用AI内容或回退到模板
 if validate_content "$status_content" >/dev/null 2>&1; then
     # 使用 AI 生成的内容
@@ -343,6 +396,7 @@ execution_result=$(cat << EOF
     ".claude/context/project.md",
     ".claude/context/tech-stack.md", 
     ".claude/context/architecture.md",
+    ".claude/context/requirements.md",
     ".claude/context/current-status.md"
   ],
   "next_actions": [

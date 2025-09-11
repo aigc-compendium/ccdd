@@ -2,11 +2,31 @@
 allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash
 ---
 
-# DD 议题状态更新
+# Issue Update
 
 智能更新议题状态、进度和相关信息，支持手动更新或基于代码变更自动推断。
 
-## 核心功能
+## Usage
+
+### 自动更新（推荐）
+
+```bash
+/dd:issue-update <feature>:<issue_id>
+```
+
+### 手动指定状态
+
+```bash
+/dd:issue-update <feature>:<issue_id> --status "已完成" --progress 100
+```
+
+支持的参数：
+
+- `--status` - 指定新状态
+- `--progress` - 指定进度百分比
+- `--notes` - 添加更新说明
+
+## Instructions
 
 ### 1. 议题状态读取
 
@@ -30,16 +50,14 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 - 结合代码实现情况调整进度
 - 更新议题文档的 progress 字段
 
-## 状态更新逻辑
-
-### 议题状态定义
+### 4. 议题状态定义
 
 - **未开始** (0%) - 议题尚未开始，无代码变更
 - **进行中** (1%-99%) - 议题正在进行，有部分实现
 - **已完成** (100%) - 议题完全完成，通过验收标准
 - **需重构** - 议题需要重新设计或实现
 
-### 自动状态推断规则
+### 5. 自动状态推断规则
 
 1. **检查 TODO 完成度**
    - 所有 TODO 项目完成 → 候选状态：已完成
@@ -54,13 +72,7 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
    - 满足所有验收条件 → 状态：已完成
    - 部分满足 → 状态：进行中
 
-## 使用方式
-
-### 自动更新（推荐）
-
-```bash
-/dd:issue-update <feature>:<issue_id>
-```
+### 6. 自动更新执行流程
 
 AI 会自动：
 
@@ -69,34 +81,20 @@ AI 会自动：
 3. 智能推断新的状态和进度
 4. 更新议题文档
 
-### 手动指定状态
-
-```bash
-/dd:issue-update <feature>:<issue_id> --status "已完成" --progress 100
-```
-
-支持的参数：
-
-- `--status` - 指定新状态
-- `--progress` - 指定进度百分比
-- `--notes` - 添加更新说明
-
-## 执行流程
-
-### 1. 状态信息收集
+### 7. 状态信息收集
 
 ```bash
 # 读取当前议题状态
 bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 ```
 
-### 2. 变更分析
+### 8. 变更分析
 
 - 检查 Git 工作区状态
 - 分析相关文件的修改情况
 - 统计 TODO 项目完成度
 
-### 3. 智能状态推断
+### 9. 智能状态推断
 
 基于收集的信息，AI 智能判断：
 
@@ -104,7 +102,7 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 - 合适的状态转换
 - 准确的进度百分比
 
-### 4. 文档更新
+### 10. 文档更新
 
 文档位置:
 `.claude/<feature>/issues/<issue_id>.md`
@@ -116,22 +114,22 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 - `updated_at` - 更新时间
 - `notes` - 更新说明（如有）
 
-### 5. 智能联动更新
+### 11. 智能联动更新
 
-议题状态更新完成后, 自动触发功能整体状态更新:
+议题状态更新完成后，自动触发功能整体状态更新：
 
 ```bash
-# 自动调用功能更新命令, 重新计算功能整体进度和状态
+# 自动调用功能更新命令，重新计算功能整体进度和状态
 /dd:feature-update <feature>
 ```
 
-这确保了议题状态变更能及时反映到功能和项目整体状态中.
+这确保了议题状态变更能及时反映到功能和项目整体状态中。
 
-## 批量更新
+### 12. 批量更新
 
 当需要更新功能的所有议题时，建议使用 `/dd:feature-update` 命令。
 
-## 使用示例
+### 13. 使用示例
 
 ```bash
 # 自动更新议题状态
@@ -141,9 +139,6 @@ bash .claude/scripts/dd/query/get-issue.sh "<feature>:<issue_id>"
 /dd:issue-update 用户认证系统:001 --status "已完成" --progress 100
 ```
 
-## 注意事项
+## Important Notes
 
-- 状态更新后无法自动撤销，请谨慎操作
-- 建议在重要节点及时更新议题状态
-- 自动推断的状态可能需要人工确认
-- 状态更新会影响功能整体进度计算
+状态更新后无法自动撤销，请谨慎操作。建议在重要节点及时更新议题状态，自动推断的状态可能需要人工确认。

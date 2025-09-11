@@ -2,17 +2,27 @@
 allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash
 ---
 
-# DD 功能状态更新
+# Feature Update
 
 智能更新功能整体状态和进度，自动遍历并更新所有子议题状态，提供功能级别的进度管理。
 
-## 使用方式
+## Usage
 
 ### 自动更新（推荐）
 
 ```bash
 /dd:feature-update <feature_name>
 ```
+
+### 手动指定状态
+
+```bash
+/dd:feature-update <feature_name> --status "已完成"
+```
+
+## Instructions
+
+### 1. 自动更新执行流程
 
 AI 会自动：
 
@@ -21,15 +31,7 @@ AI 会自动：
 3. 更新功能文档
 4. 生成进度报告
 
-### 手动指定状态
-
-```bash
-/dd:feature-update <feature_name> --status "已完成"
-```
-
-## 核心功能
-
-### 1. 功能状态读取
+### 2. 功能状态读取
 
 自动调用状态脚本获取功能和所有子议题信息，所有用法选项：
 
@@ -42,7 +44,7 @@ bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       
 bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
 ```
 
-### 2. 子议题批量更新
+### 3. 子议题批量更新
 
 在更新功能状态前，自动遍历并更新所有子议题：
 
@@ -50,7 +52,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 - 智能推断议题进度和状态变更
 - 更新所有议题文档的元数据
 
-### 3. 功能整体状态计算
+### 4. 功能整体状态计算
 
 基于所有子议题状态计算功能整体状态：
 
@@ -58,7 +60,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 - **进行中** - 部分议题已开始或完成
 - **已完成** - 所有议题都已完成
 
-### 4. 进度自动聚合
+### 5. 进度自动聚合
 
 智能计算功能整体进度：
 
@@ -66,9 +68,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 - 考虑议题优先级和复杂度
 - 更新功能文档的 progress 字段
 
-## 更新执行流程
-
-### 1. 功能信息收集
+### 6. 功能信息收集
 
 ```bash
 # 读取功能状态和所有子议题信息 - 所有用法选项：
@@ -80,7 +80,7 @@ bash .claude/scripts/dd/query/get-feature.sh --technical "<feature_name>"       
 bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      # 仅读取验收标准文档 (acceptance.md)
 ```
 
-### 2. 子议题批量分析和更新
+### 7. 子议题批量分析和更新
 
 对每个子议题执行：
 
@@ -90,7 +90,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 4. 更新议题文档
 5. 记录更新日志
 
-### 3. 功能状态聚合
+### 8. 功能状态聚合
 
 基于更新后的子议题状态：
 
@@ -98,7 +98,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 - 确定功能整体状态
 - 识别阻塞问题和风险
 
-### 4. 功能文档更新
+### 9. 功能文档更新
 
 文档位置:
 `.claude/features/<feature_name>/overview.md`
@@ -110,7 +110,7 @@ bash .claude/scripts/dd/query/get-feature.sh --acceptance "<feature_name>"      
 - `issues_total` - 总议题数量
 - `issues_completed` - 已完成议题数
 
-### 5. 更新项目状态上下文
+### 10. 更新项目状态上下文
 
 功能文档更新完成后, 智能分析并更新项目整体状态:
 
@@ -129,10 +129,14 @@ done
 # 3. AI 根据收集到的所有功能状态，智能分析并更新 .claude/context/current-status.md
 ```
 
-## 状态计算逻辑
+### 11. 状态计算逻辑
 
 - **未开始**: 所有议题未开始
 - **进行中**: 部分议题已开始或完成
 - **已完成**: 所有议题已完成
 
 进度 = 已完成议题数 / 总议题数 × 100%
+
+## Important Notes
+
+提供功能级别的进度管理，自动聚合子议题状态，确保功能状态实时准确。
