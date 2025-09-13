@@ -14,6 +14,7 @@ allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash, Grep, Glob
 ```
 
 Options:
+
 - `--temp` - 临时需求，使用特殊处理流程
 
 ## Instructions
@@ -73,14 +74,17 @@ bash .claude/scripts/dd/utils/git-info.sh updates            # 检查远程更�
 此命令支持用户自定义的 hooks 配置，在执行过程中的关键阶段会触发相应的钩子。
 
 **Before 阶段 - 议题执行前**
+
 - 触发时机：在议题执行启动之前
 - 用途：状态检查、环境准备、权限验证
 
 **Running 阶段 - 议题执行过程中**
+
 - 触发时机：在议题执行分析过程中
 - 用途：执行过程监控、状态验证、中间结果处理
 
 **After 阶段 - 议题执行启动后**
+
 - 触发时机：在议题开始执行或恢复执行完成后
 - 用途：状态同步、通知发送、后续处理
 - 示例：更新议题状态、发送开始通知、同步项目看板
@@ -104,9 +108,11 @@ bash .claude/scripts/dd/utils/git-info.sh updates            # 检查远程更�
 - **议题依赖检查** - 通过议题状态脚本检查前置议题完成情况，确保：议题文档存在，前置议题已完成
 
 **Running 阶段执行**
+
 - **执行分析** - 是否符合议题需求/技术方案，对当前执行进行智能分析
 
 **After 阶段执行**
+
 - **议题状态** - 智能理解执行进度，更新议题和功能状态
 
 ### 8. 智能体状态判断
@@ -120,6 +126,7 @@ bash .claude/scripts/dd/utils/git-info.sh updates            # 检查远程更�
 根据状态采取对应操作：
 
 **未开始议题 (status: 未开始)**
+
 - 深度分析议题技术实现路径
 - 识别潜在风险和技术依赖
 - 制定详细执行计划和时间安排
@@ -127,6 +134,7 @@ bash .claude/scripts/dd/utils/git-info.sh updates            # 检查远程更�
 - 调用 `/dd:issue-update <功能>:<议题ID>` 更新议题状态为 `进行中`，进度设为 1%
 
 **进行中议题 (status: 进行中)**
+
 - 加载会话上下文恢复工作状态
 - 分析已完成和未完成的 Todo 项目
 - 继续未完成的开发工作
@@ -134,6 +142,7 @@ bash .claude/scripts/dd/utils/git-info.sh updates            # 检查远程更�
 - 保存当前工作状态到会话文件
 
 **已完成议题 (status: 已完成)**
+
 - 显示议题完成概要和成果
 - 检查功能中是否有后续议题
 - 计算和更新功能整体进度
@@ -162,11 +171,13 @@ bash .claude/scripts/dd/utils/git-info.sh updates            # 检查远程更�
 
 **自动完成判断**
 议题在以下情况下自动标记为已完成：
+
 - 所有 todo 项目都已勾选完成
 - 议题进度达到 100%
 - 满足议题的验收标准
 
 **完成后自动操作**
+
 1. 调用 `/dd:issue-update <功能>:<议题ID>` 更新议题状态为 `已完成`
 2. 自动触发 `/dd:feature-update <功能>` 计算和更新功能整体进度
 3. 检查并解锁依赖此议题的其他议题

@@ -114,6 +114,7 @@
 **功能**: 通过入参返回系统信息和项目文件内容
 
 **使用方法**:
+
 ```bash
 # 时间信息
 .claude/scripts/dd/utils/info-getter.sh time           # 本地时间 (兼容 mac/linux)
@@ -139,6 +140,7 @@
 **位置**: `.claude/scripts/dd/utils/git-info.sh`
 
 **功能**: 提供精简的 Git 状态信息
+
 ```bash
 .claude/scripts/dd/utils/git-info.sh branch    # 当前分支名
 .claude/scripts/dd/utils/git-info.sh status    # 工作区状态

@@ -15,6 +15,7 @@ allowed-tools: Bash, Read, Write, LS, Task
 ```
 
 **allowed-tools 规则：**
+
 - 必须声明命令中使用的所有工具
 - 常见工具：`Bash`, `Read`, `Write`, `LS`, `Task`, `Edit`, `MultiEdit`, `Grep`, `Glob`
 - 顺序按使用频率或重要性排列
@@ -28,6 +29,7 @@ allowed-tools: Bash, Read, Write, LS, Task
 ```
 
 **标题规则：**
+
 - 使用英文标题（如：`# Epic Start`）
 - 描述要简洁明了，一句话说明核心功能
 - 避免冗长的解释，重点突出价值
@@ -36,16 +38,20 @@ allowed-tools: Bash, Read, Write, LS, Task
 
 ### 1. Usage 格式
 
-```markdown
+````markdown
 ## Usage
+
 ```bash
 /command:subcommand <required_param> [optional_param]
 ```
+````
 
 Options:
+
 - `--flag` - Flag description
 - `--option <value>` - Option with value description
-```
+
+````
 
 **Usage 规则：**
 - 使用 bash 代码块
@@ -67,12 +73,13 @@ Options:
 ## Instructions
 
 ### 1. Section Name
-### 2. Section Name  
+### 2. Section Name
 ### 3. Section Name
 ...
-```
+````
 
 **结构规则：**
+
 - 使用数字编号的三级标题
 - 按执行顺序组织内容
 - 每个部分功能明确，独立完整
@@ -80,24 +87,29 @@ Options:
 ### 2. 代码块规范
 
 **Bash 命令：**
-```markdown
+
+````markdown
 ```bash
 # Check something
 if [ condition ]; then
   echo "Success"
 fi
 ```
+````
 
 **配置文件：**
-```markdown
+
+````markdown
 ```yaml
 key: value
 nested:
   - item1
   - item2
 ```
+````
 
 **规则：**
+
 - 所有代码块必须指定语言
 - Bash 代码包含注释说明
 - 复杂逻辑要分步骤解释
@@ -105,14 +117,17 @@ nested:
 ### 3. 错误处理
 
 **格式：**
+
 ```markdown
 If X fails:
+
 - "❌ {What failed}: {How to fix}"
-- Continue with what's possible  
+- Continue with what's possible
 - Never leave partial state
 ```
 
 **规则：**
+
 - 明确说明失败条件
 - 提供具体修复建议
 - 避免部分状态或数据损坏
@@ -121,20 +136,23 @@ If X fails:
 
 ### 1. Quick Check 部分
 
-```markdown
+````markdown
 ## Quick Check
 
 1. **Check condition:**
    ```bash
    command_to_check
    ```
-   If it fails: "❌ Error message with fix suggestion"
+````
+
+If it fails: "❌ Error message with fix suggestion"
 
 2. **Verify state:**
    - Check file exists
    - Validate format
    - Confirm prerequisites
-```
+
+````
 
 **用途：**
 - 快速验证前置条件
@@ -158,9 +176,10 @@ Do not bother the user with preflight checks progress ("I'm not going to ..."). 
    - Required tools available
    - External services accessible
    - File system permissions
-```
+````
 
 **规则：**
+
 - 执行前必须完成的检查
 - 失败时停止执行
 - 不要向用户展示检查过程
@@ -171,11 +190,13 @@ Do not bother the user with preflight checks progress ("I'm not going to ..."). 
 ## Required Rules
 
 **IMPORTANT:** Before executing this command, read and follow:
+
 - `.claude/rules/datetime.md` - For getting real current date/time
 - `.claude/rules/branch-operations.md` - For git operations
 ```
 
 **用途：**
+
 - 引用项目级别的规则文件
 - 确保一致性行为
 - 避免重复规则说明
@@ -186,18 +207,20 @@ Do not bother the user with preflight checks progress ("I'm not going to ..."). 
 
 ```markdown
 ### X. Output
-
 ```
+
 ✅ Operation Complete
 
 Summary:
-  - Item 1: Status
-  - Item 2: Status
-  
+
+- Item 1: Status
+- Item 2: Status
+
 Next Steps:
-  /command:next - Description
-  /command:other - Description
-```
+/command:next - Description
+/command:other - Description
+
+````
 
 ### 2. 错误输出
 
@@ -205,30 +228,34 @@ Next Steps:
 ## Error Handling
 
 If any step fails:
-```
+````
+
 ❌ What went wrong
-  Details: {error_details}
-  
+Details: {error_details}
+
 Fix: {specific_steps_to_resolve}
-  
+
 Try: {alternative_approach}
-```
+
+````
 
 ### 3. 进度输出
 
 ```markdown
-```
+````
+
 🚀 Process Started: {name}
 
 Status: {current_stage}
 
 Progress:
-  ├─ Step 1: ✅ Complete
-  ├─ Step 2: 🔄 In Progress  
-  └─ Step 3: ⏸ Waiting
+├─ Step 1: ✅ Complete
+├─ Step 2: 🔄 In Progress  
+ └─ Step 3: ⏸ Waiting
 
 Monitor with: /command:status {name}
-```
+
+````
 
 ## 命令类型模式
 
@@ -242,13 +269,14 @@ allowed-tools: Bash
 Run `bash .claude/scripts/path/script.sh $ARGUMENTS` using a sub-agent and show me the complete output.
 
 - DO NOT truncate.
-- DO NOT collapse.  
+- DO NOT collapse.
 - DO NOT abbreviate.
 - Show ALL lines in full.
 - DO NOT print any other comments.
-```
+````
 
 **特点：**
+
 - 简单直接
 - 执行特定脚本
 - 显示完整输出
@@ -259,22 +287,26 @@ Run `bash .claude/scripts/path/script.sh $ARGUMENTS` using a sub-agent and show 
 ## Instructions
 
 ### 1. Read Context
+
 - Load required files
 - Parse configurations
 - Understand current state
 
-### 2. Process Data  
+### 2. Process Data
+
 - Transform information
 - Apply business logic
 - Generate results
 
 ### 3. Output Results
+
 - Format output
 - Update files
 - Provide feedback
 ```
 
 **特点：**
+
 - 多步骤处理
 - 数据转换
 - 状态管理
@@ -283,23 +315,28 @@ Run `bash .claude/scripts/path/script.sh $ARGUMENTS` using a sub-agent and show 
 
 ```markdown
 ### 1. Gather Input
+
 Ask user for:
+
 - Required parameters
 - Configuration options
 - Preferences
 
 ### 2. Validate Input
+
 - Format checking
-- Range validation  
+- Range validation
 - Consistency verification
 
 ### 3. Execute Action
+
 - Process user input
 - Perform operations
 - Handle errors gracefully
 ```
 
 **特点：**
+
 - 用户交互
 - 输入验证
 - 动态执行
@@ -359,21 +396,25 @@ Ask user for:
 ## 工具使用指南
 
 ### Bash 工具
+
 - 用于执行 shell 命令
 - 包含脚本运行和系统操作
 - 需要处理命令失败情况
 
 ### Read/Write 工具
+
 - Read：读取文件内容
 - Write：创建或覆盖文件
 - 注意文件路径和权限
 
 ### Task 工具
+
 - 调用子智能体
 - 需要指定 subagent_type
 - 传递完整上下文
 
 ### LS 工具
+
 - 列出目录内容
 - 验证文件存在性
 - 目录结构检查
