@@ -103,38 +103,21 @@ bash .claude/scripts/dd/utils/get-session.sh
 - 确定的改进方向和优先级
 - 团队的技术现状和发展需求
 
-### 6. 执行 after-init.sh 后处理脚本
+### 6. 直接生成项目上下文文件
 
-```bash
-bash .claude/scripts/dd/after-init.sh "$structured_data"
-```
+基于深度对话和项目分析结果，直接创建以下项目上下文文件：
 
-**structured_data 数据结构**:
+- `.claude/context/project.md` - 基于现状的项目深度描述
+- `.claude/context/tech-stack.md` - 技术栈现状分析和改进建议
+- `.claude/context/architecture.md` - 架构现状和演进规划
+- `.claude/context/requirements.md` - 基于现有功能的需求整理
+- `.claude/context/current-status.md` - 真实项目状态和行动计划
 
-```json
-{
-  "project_name": "项目名称",
-  "project_type": "基于分析确定的项目类型",
-  "tech_stack": "现有技术栈 + 改进建议",
-  "architecture": "现有架构模式 + 演进方向",
-  "conversation": "深度对话的关键要点总结",
-  "project_content": "基于现状的项目深度描述",
-  "tech_content": "技术栈现状分析和改进建议",
-  "architecture_content": "架构现状和演进规划",
-  "requirements_content": "基于现有功能的需求整理",
-  "status_content": "真实项目状态和行动计划"
-}
-```
-
-### 7. 合并配置文件
-
-调用 claude-md-merger 智能体，将 `.claude/CLAUDE.md` 合并到根目录 `CLAUDE.md`
-
-## 上下文文档生成格式要求
+#### 上下文文档生成格式要求
 
 所有上下文文档必须遵循统一的格式结构：
 
-### .claude/context/project.md 格式
+`.claude/context/project.md` 格式
 
 ```yaml
 ---
@@ -150,7 +133,7 @@ status: 当前状态
 ## 下一步计划
 ```
 
-### .claude/context/tech-stack.md 格式
+`.claude/context/tech-stack.md` 格式
 
 ```yaml
 ---
@@ -162,7 +145,7 @@ status: 当前状态
 ## 工具链现状
 ```
 
-### .claude/context/architecture.md 格式
+`.claude/context/architecture.md` 格式
 
 ```yaml
 ---
@@ -176,7 +159,7 @@ architecture: 架构模式
 ## 关键决策
 ```
 
-### .claude/context/requirements.md 格式
+`.claude/context/requirements.md` 格式
 
 ```yaml
 ---
@@ -191,7 +174,7 @@ type: 项目类型
 ## 新功能规划
 ```
 
-### .claude/context/current-status.md 格式
+`.claude/context/current-status.md` 格式
 
 ```yaml
 ---
@@ -205,6 +188,10 @@ progress: 百分比
 ## 待解决问题
 ## 下一步行动
 ```
+
+### 7. 合并配置文件
+
+调用 claude-md-merger 智能体，将 `.claude/CLAUDE.md` 合并到根目录 `CLAUDE.md`
 
 ### 8. 完成提示
 
