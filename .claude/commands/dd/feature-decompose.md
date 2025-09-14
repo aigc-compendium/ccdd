@@ -126,10 +126,11 @@ bash .claude/scripts/dd/generator/generate-issue.sh "<功能名称>" "<议题ID>
 
 ### 7. 更新功能文档议题清单
 
-分解完成后，自动更新 `.claude/features/<功能名称>/overview.md` 中的 `## issues` 部分：
+分解完成后，自动更新 `.claude/features/<功能名称>/overview.md` 中的 `## issues` 部分:
+
+扫描生成的议题文件，获取议题列表
 
 ```bash
-# 扫描生成的议题文件，获取议题列表
 echo "=== 更新功能议题清单 ==="
 for issue_file in .claude/features/<功能名称>/issues/*.md; do
     issue_id=$(basename "$issue_file" .md)
@@ -140,9 +141,9 @@ done
 # AI 基于扫描结果，智能更新 overview.md 的 ## issues 部分
 # 确保格式为:
 # ## issues
-# - 001
-# - 002
-# - 003
+# - 001: <议题名>
+# - 002: <议题名>
+# - 003: <议题名>
 ```
 
 ### 8. 输出结果生成
